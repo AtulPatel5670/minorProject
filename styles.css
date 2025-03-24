@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display box-shadow: 0px 0px 100px rgb(250, 250, 250);=swap');
+
+
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%; /* Full width */
+    height: 8%;
+    background-color: #40cafc;
+    color: white; /* White text */
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 800%;
+    font-family: 'Dancing Script', 'Lucida Handwriting', cursive;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure it stays on top of other content */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #0a0000;
+    margin: 0;
+    background-image: url(background.jpg);
+    background-repeat: no-repeat;
+    background-size: 100% 99%;
+}
+
+
+
+.login-container {
+    margin-top: 5%;
+    padding: 20px;
+    border-radius: 60px;
+    box-shadow: 0px 0px 100px rgb(250, 250, 250);
+    text-align: center;
+    width: 45%;
+    height: 60%;
+   
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+    font-size: 100px;
+    color: #40cafc;
+    font-family: 'Dancing Script', 'Lucida Handwriting', cursive;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 15px;
+    font-size: xx-large;
+    padding: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #20211d;
+}
+
+input {
+    width: 100%;
+    height: 300%;
+    padding: 15px;
+    border: 1px solid #000dff;
+    border-radius: 30px;
+    box-shadow: 0px 0px 100px rgba(250, 250, 250, 0.192);
+    font-size: 2rem;
+}
+
+
+.checkboxdiv {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    padding: 1%;
+}
+
+.checkboxdiv input {
+    width: auto;
+    margin-right: 10px;
+    scale: 200%;
+}
+
+
+button {
+    width: 100%;
+    padding: 15px;
+    background-color: #021406;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 2rem;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #00a2ff;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+.toggle-form {
+    margin-top: 15px;
+    cursor: pointer;
+    color: #40cafc;
+    font-size: 1.5rem;
+}
+
+.google-signin {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+

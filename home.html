@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+
+    nav {
+            position: fixed;
+
+            display: flex;
+            align-items: center; /* Align items vertically */
+            justify-content: space-between; /* Space out the home button and p tag */
+            padding: 15px 20px;
+
+            top: 0;
+            left: 0;
+            width: 100%; /* Full width */
+            height: 8%;
+            background-color: #40cafc;
+            color: white; /* White text */
+            text-align: center;
+            font-size: 700%;
+            font-family: 'Dancing Script', 'Lucida Handwriting', cursive;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000; /* Ensure it stays on top of other content */
+            
+        }
+        .center-text {
+            flex: 1; /* Take up the remaining space */
+            text-align: center; /* Center the text horizontally */
+            margin: 0; /* Remove default margins */
+        
+        }
+
+    .main {
+      padding: 1rem;
+      max-width: 70%;
+      margin: 0 auto;
+      margin-top: 200px;
+     
+    }
+
+    .search-bar {
+      margin-bottom: 1.5rem;
+      
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 30px;
+    }
+
+    
+    .sections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 5rem;
+    }
+
+    .section {
+      background: rgb(112, 77, 239);
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 100px;
+      font-size: 50px;
+      padding: 1rem;
+      padding-bottom: 20%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+      text-decoration: none;
+   
+    }
+
+    .section:hover {
+      transform: translateY(-10px);
+      box-shadow: rgba(241, 4, 4, 0.742) 0px 1px 1px 0px inset, rgba(5, 5, 251, 0.852) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    }
+
+    .section h2 {
+      color: #f5f8fa;
+      margin-bottom: 0.5rem;
+    }
+
+    .section p {
+      color: #faf3f3;
+    }
+
+    .footer {
+      background-color: #f4f4f9;
+      text-align: left;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #555;
+      border-top: 1px solid #ddd;
+    }
+   
+    
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+
+    }
+
+    .dropdown-btn {
+      background-color: #007bff;
+      color: rgb(254, 253, 253);
+      border: none;
+      padding: 20px 25px;
+      font-size: 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .dropdown-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: rgb(255, 255, 255);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      overflow: hidden;
+      z-index: 1000;
+      width: fit-content;
+
+     
+    }
+    
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .action-btn {
+        background-color: #762fd3;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+    .action-btn:hover {
+        background-color: #ff4000;
+    }
+
+  </style>
+</head>
+<body>
+    <Nav>
+        
+            <div class="dropdown">
+              <button class="dropdown-btn">Menu</button>
+              <div class="dropdown-content">
+                    <button id="logoutBtn" class="action-btn">Logout</button>
+                    <button id="deleteAccountBtn" class="action-btn">Delete Account</button>
+                </div>
+            </div>
+        <p class="center-text">VisuAlgo</p>
+    </Nav>
+  
+  <div class="main" id="app">
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input 
+        type="text" 
+        placeholder="Search algo to be visualized..." 
+        id="searchInput"
+      >
+    </div>
+
+    <!-- Sections -->
+      <div class="sections" id="sectionsContainer">
+        <!-- JavaScript will dynamically generate content here -->
+      </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2025 Algorithm Visualizer. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = [
+        { name: 'Sorting Algorithms', description: 'Visualize different sorting techniques.', link: '/sorting.html' },
+        { name: 'Pathfinding Algorithms', description: 'Learn about pathfinding methods.', link: '/pathfinding.html' },
+        { name: 'Graph Algorithms', description: 'Explore graph traversal and algorithms.', link: '/graph.html' },
+        { name: 'Dynamic Programming', description: 'Understand dynamic programming solutions.', link: '/dp.html' },
+        { name: 'Data Structures', description: 'Visualize various data structures.', link: '/data-structures.html' },
+        { name: 'Recursion', description: 'See recursion in action.', link: '/recursion.html' },
+        { name: 'Searching', description: 'See searchin in action.', link: '/searching.html' }
+      ];
+
+      const searchInput = document.getElementById('searchInput');
+      const sectionsContainer = document.getElementById('sectionsContainer');
+
+      const renderSections = (filter = '') => {
+        sectionsContainer.innerHTML = '';
+        const filteredSections = sections.filter(section => 
+          section.name.toLowerCase().includes(filter.toLowerCase())
+        );
+
+        filteredSections.forEach(section => {
+          const sectionElement = document.createElement('a');
+          sectionElement.href = section.link;
+          sectionElement.className = 'section';
+          sectionElement.innerHTML = `
+            <h2>${section.name}</h2>
+            <p>${section.description}</p>
+          `;
+          sectionsContainer.appendChild(sectionElement);
+        });
+      };
+
+      searchInput.addEventListener('input', (e) => {
+        renderSections(e.target.value);
+      });
+
+      renderSections();
+
+    });
+    
+    document.addEventListener('DOMContentLoaded', () => {
+    const logoutBtn = document.getElementById('logoutBtn');
+    const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+
+    // Helper function to get the current session
+    const getCurrentSession = () => {
+        const session = localStorage.getItem('currentSession');
+        return session ? JSON.parse(session) : null;
+    };
+
+    // Helper function to get all users from localStorage
+    const getUsers = () => {
+        const users = localStorage.getItem('users');
+        return users ? JSON.parse(users) : [];
+    };
+
+    // Logout functionality
+    logoutBtn.addEventListener('click', () => {
+        const currentSession = getCurrentSession();
+        if (currentSession) {
+            localStorage.removeItem('currentSession'); // Remove the session
+            alert('You have been logged out.');
+            window.location.href = 'login.html'; // Redirect to login page
+        } else {
+            alert('No active session found.');
+        }
+    });
+
+    // Delete Account functionality
+    deleteAccountBtn.addEventListener('click', () => {
+        const currentSession = getCurrentSession();
+        if (currentSession) {
+            const confirmDelete = confirm(
+                `Are you sure you want to delete your account (${currentSession.username})? This action cannot be undone.`
+            );
+            if (confirmDelete) {
+                // Remove the user from the users list
+                const users = getUsers();
+                const updatedUsers = users.filter(user => user.username !== currentSession.username);
+                localStorage.setItem('users', JSON.stringify(updatedUsers)); // Save updated user list
+
+                // Remove the current session
+                localStorage.removeItem('currentSession');
+                alert('Your account has been deleted.');
+                window.location.href = 'login.html'; // Redirect to login page
+            }
+        } else {
+            alert('No account data found to delete.');
+        }
+    });
+});
+
+
+  </script>
+</body>
+</html>
