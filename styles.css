@@ -17,6 +17,10 @@ header {
     font-weight: bold;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000; /* Ensure it stays on top of other content */
+    text-shadow:
+  1px 1px 2px rgb(89, 0, 255),
+  0 0 1em blue,
+  0 0 0.2em blue;
 }
 
 body {
@@ -43,6 +47,12 @@ body {
     width: 45%;
     height: 60%;
    
+}
+
+.login-container:hover{
+    transform: scale(-10px);
+    box-shadow: rgba(241, 4, 4, 0.742) 0px 1px 1px 0px inset, rgba(5, 5, 251, 0.852) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+
 }
 
 .login-container h2 {

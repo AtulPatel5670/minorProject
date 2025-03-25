@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Algorithm Visualizer</title>
+    <title>BUBBLE SORT</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     <style>
@@ -12,14 +12,14 @@
             text-align: center;
             background-color: #f4f4f4;
             margin: 0;
-            padding-top: 10%;
+            padding-top: 7%;
         }
         nav {
     position: fixed;
     display: flex;
     align-items: center; /* Vertically align items */
    
-    padding: 15px 20px;
+    padding-top: 20px;
     top: 0;
     left: 0;
     width: 100%; /* Full width */
@@ -30,6 +30,10 @@
     font-weight: bold;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000; /* Keep nav on top */
+    text-shadow:
+  1px 1px 2px rgb(55, 0, 255),
+  0 0 1em blue,
+  0 0 0.2em blue;
 }
 
 .home-button {
@@ -57,7 +61,7 @@
 
 .dropdown-btn {
     padding: 10px 15px;
-    background-color: red;
+    background-color: rgb(200, 255, 0);
     color: white;
     border: none;
     border-radius: 5px;
@@ -89,13 +93,14 @@
     display: block;
     padding: 8px 15px;
     text-decoration: none;
-    color: black;
+    color: rgb(253, 248, 248);
     font-size: 2rem;
     transition: background-color 0.3s ease;
+
 }
 
 .dropdown-content a:hover {
-    background-color: #f1f1f1;
+    background-color: #4966f2;
 }
 
 .center-text {
@@ -109,6 +114,13 @@
     text-align: center;
 }
 
+.heading{
+    font-size: 50px;
+    font-weight: bold;
+    margin: 0;
+    color: #0056b3;
+}
+
         h1 {
             color: #333;
             margin-top: 20px;
@@ -118,7 +130,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+    
         }
         .visualizer {
             display: flex;
@@ -151,6 +163,7 @@
             text-align: left;
             font-size: 25px;
             color: #fbfafa;
+            
         }
 
         .container {
@@ -166,22 +179,22 @@
         }
        
         .bar {
-            width: 25px;
+            width: 100%;
             margin: 0 5px;
-            background-color: rgb(0, 47, 86);
+            background-color: rgb(5, 139, 248);
             display: inline-block;
-            transition: height 0.3s;
+            transition: height 0.5s;
             border-radius: 5px;
             position: relative;
         }
         .bar-label {
             position: absolute;
-            bottom: -20px;
+            bottom: -50px;
             width: 100%;
             text-align: center;
-            font-size: 12px;
-            font-weight: bold;
-            color: black;
+            font-size: 200%;
+            font-weight: bolder;
+            color: rgb(134, 1, 250);
         }
 
        
@@ -191,7 +204,7 @@
             text-align: left;
         }
         #code-display-text {
-            font-size: 16px; /* Adjust text size */
+            font-size: 17px; /* Adjust text size */
             text-align: left;
             line-height: 2; /* Line height for readability */
         }
@@ -203,7 +216,7 @@
             border-radius: 8px;
             font-family: monospace;
             font-size: 100px;
-            overflow-y: auto;
+            overflow: auto;
             max-height: 500px;
         }
         #log-container {
@@ -232,9 +245,10 @@
             width: 100%;
             display: flex;
             align-items: center; /* Align items vertically */
-            padding: 15px 20px;
-            margin-left: 50%;
+            padding: 0;
+            margin-left: 20%;
             column-gap: 50px;
+            height: 5%;
         }
         button{
             background-color: #007bff;
@@ -313,17 +327,21 @@
             <div class="dropdown">
               <button class="dropdown-btn">Menu</button>
               <div class="dropdown-content">
-                    <a href="selectionsort.html">Selection Sort</a>
-                    <a href="mergesort.html">Merge Sort</a>
+                <a href="bubblesort.html">Bubble Sort</a>
+                <a href="selectionsort.html">Selection Sort</a>
+                <a href="mergesort.html">Merge Sort</a>
+                <a href="quicksort.html">Quick Sort</a>
+                <a href="insertionsort.html">Insertion Sort</a>
                 </div>
             </div>
         <p class="center-text">VisuAlgo</p>
     </Nav>
         
     <div class="main-container">
+        <p class="heading">BUBBLE SORT</p>
         <div class="controls">
             <button onclick="generateBars()">Generate Random Bars</button>
-            <input id="size" type="range" min="10" max="50" oninput="generateBars()" />
+            <input id="size" type="range" min="6" max="20" oninput="generateBars()" />
 
             <button onclick="bubbleSort()">Sort</button>
             <input style="width: 15%;
@@ -366,7 +384,7 @@
         function generateBars() {
             const container = document.getElementById("bar-container");
             container.innerHTML = "";
-            let arraySize = Math.floor(Math.random() * 50) + 10; // Random size between 10 and 59
+            let arraySize = Math.floor(Math.random() * 20) + 6; // Random size between 10 and 20
             let numbers = Array.from({ length: arraySize }, () => Math.floor(Math.random() * 100) + 10);
             createBars(numbers);
         }
@@ -385,7 +403,7 @@
             numbers.forEach(num => {
                 let bar = document.createElement("div");
                 bar.classList.add("bar");
-                bar.style.height = `${num}px`;
+                bar.style.height = `${Math.min(num, 100)}%`;
                 let label = document.createElement("div");
                 label.classList.add("bar-label");
                 label.textContent = num;

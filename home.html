@@ -32,6 +32,10 @@
             font-weight: bold;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             z-index: 1000; /* Ensure it stays on top of other content */
+            text-shadow:
+  1px 1px 2px rgb(55, 0, 255),
+  0 0 1em blue,
+  0 0 0.2em blue;
             
         }
         .center-text {
@@ -85,7 +89,7 @@
 
     .section:hover {
       transform: translateY(-10px);
-      box-shadow: rgba(241, 4, 4, 0.742) 0px 1px 1px 0px inset, rgba(5, 5, 251, 0.852) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+      box-shadow: rgba(107, 4, 241, 0.742) 0px 1px 1px 0px inset, rgba(5, 5, 251, 0.852) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
     }
 
     .section h2 {
@@ -197,7 +201,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const sections = [
-        { name: 'Sorting Algorithms', description: 'Visualize different sorting techniques.', link: '/sorting.html' },
+        { name: 'Sorting Algorithms', description: 'Visualize different sorting techniques. <br> Bubble Sort..  Selection Sort.. <br> Merge Sort..    Quick Sort.. <br> Insertion Sort.. <br> ', link: '/bubblesort.html' },
         { name: 'Pathfinding Algorithms', description: 'Learn about pathfinding methods.', link: '/pathfinding.html' },
         { name: 'Graph Algorithms', description: 'Explore graph traversal and algorithms.', link: '/graph.html' },
         { name: 'Dynamic Programming', description: 'Understand dynamic programming solutions.', link: '/dp.html' },

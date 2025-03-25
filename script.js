@@ -34,6 +34,9 @@ document.getElementById("authForm").addEventListener("submit", function (event) 
             }
             alert("Login successful!");
             window.location.href = "home.html";
+            // window.location.href = "./alviz/mainpage/home.html";
+            // window.location.href = "C:\Users\xyz\OneDrive\Desktop\AlgorithmVisualizer\Alviz\mainpage\home.html";
+
         } else {
             document.getElementById("error-message").textContent = "Invalid username or password.";
         }
@@ -89,5 +92,6 @@ function handleGoogleLogin(response) {
     localStorage.setItem("googleUser", JSON.stringify(userCredential));
     alert("Login successful with Google!");
     window.location.href = "home.html";
+    // window.location.href = "./alviz/mainpage/home.html";
 }
 
