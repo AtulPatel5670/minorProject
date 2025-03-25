@@ -44,7 +44,7 @@ function validateInput(username, password) {
 
 // Rate limiting
 const loginAttempts = new Map();
-const MAX_ATTEMPTS = 3;
+const MAX_ATTEMPTS = 10;
 const LOCKOUT_TIME = 15 * 60 * 1000; // 15 minutes
 
 function checkLoginAttempts(username) {
