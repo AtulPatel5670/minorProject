@@ -9,14 +9,17 @@
     
 </head>
 <body>
+    <video id="background-video" autoplay muted loop playsinline>
+        <source src="backgroundclip.mp4" type="video/mp4">
+    </video>
     <header>VisuAlgo</header>
     <div class="login-container">
 
         <h2 id="form-title">Login</h2>
         <form id="authForm">
             <div class="input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Enter your username" required>
+                <label for="username">Username or Email</label>
+                <input type="text" id="username" placeholder="Enter your username or email" required>
             </div>
             <div class="input-group">
                 <label for="password">Password</label>
@@ -36,6 +39,9 @@
         <p class="toggle-form" id="toggleForm">Don't have an account? Sign up</p>
 
         <!-- Google Login Button -->
+        <div class="divider">
+            <span>or</span>
+        </div>
         <div id="googleSignIn" class="google-signin"></div>
          <!-- New Logout and Delete Account Buttons -->
         

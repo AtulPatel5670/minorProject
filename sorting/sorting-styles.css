@@ -1,0 +1,532 @@
+:root {
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+    --text-color: #2d3748;
+    --bg-color: #f7fafc;
+    --card-bg: #ffffff;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--bg-color) 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    color: var(--text-color);
+}
+
+/* Navigation Styles */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-decoration: none;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Button Styles */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Main Container */
+.main-container {
+    max-width: 1200px;
+    margin: 8rem auto 2rem;
+    padding: 0 1rem;
+}
+
+/* Visualizer Grid */
+.visualizer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Array Container */
+.array-container {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    min-height: 400px;
+}
+
+.array-bars {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 300px;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    gap: 4px;
+}
+
+.bar {
+    background: var(--primary-color);
+    width: 40px;
+    transition: all 0.3s ease;
+    border-radius: 4px 4px 0 0;
+    position: relative;
+}
+
+.bar.comparing {
+    background: #f6ad55;
+}
+
+.bar.key {
+    background: #805ad5;
+}
+
+.bar.sorted {
+    background: #48bb78;
+}
+
+.bar-label {
+    position: absolute;
+    bottom: -25px;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+/* Code Container */
+.code-container {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    overflow: auto;
+    max-height: 500px;
+}
+
+.code-display {
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #2d3748;
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.code-line {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: var(--transition);
+    white-space: pre;
+}
+
+.code-line.active {
+    background: rgba(102, 126, 234, 0.1);
+    border-left: 3px solid var(--primary-color);
+}
+
+.code-line.highlight {
+    background: rgba(246, 173, 85, 0.2);
+}
+
+/* Syntax Highlighting */
+.code-line .keyword { color: #805ad5; }
+.code-line .function { color: #3182ce; }
+.code-line .variable { color: #2d3748; }
+.code-line .comment { color: #718096; }
+.code-line .operator { color: #e53e3e; }
+
+/* Stats Cards */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #4a5568;
+    font-size: 0.9rem;
+}
+
+/* Controls Panel */
+.controls-panel {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.control-group label {
+    color: #4a5568;
+}
+
+.control-group input[type="range"] {
+    width: 150px;
+}
+
+.control-group input[type="number"] {
+    width: 80px;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+}
+
+/* Log Container */
+.log-container {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    margin-top: 2rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.log-container h2 {
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.log-entry {
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.log-entry.comparison {
+    background: rgba(246, 173, 85, 0.1);
+    border-left: 3px solid #f6ad55;
+}
+
+.log-entry.swap {
+    background: rgba(72, 187, 120, 0.1);
+    border-left: 3px solid #48bb78;
+}
+
+.log-entry.sorted {
+    background: rgba(102, 126, 234, 0.1);
+    border-left: 3px solid var(--primary-color);
+}
+
+.log-entry.complexity {
+    background: rgba(102, 126, 234, 0.1);
+    border-left: 3px solid var(--primary-color);
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.log-timestamp {
+    color: #718096;
+    font-size: 0.8rem;
+}
+
+/* Complexity Info */
+.complexity-info {
+    margin-top: 8px;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.complexity-title {
+    font-weight: 600;
+    color: #667eea;
+    margin-bottom: 8px;
+}
+
+.complexity-details {
+    font-size: 0.9em;
+}
+
+.complexity-details ul {
+    margin: 4px 0;
+    padding-left: 20px;
+}
+
+.complexity-details li {
+    margin: 2px 0;
+}
+
+.complexity-details div {
+    margin: 4px 0;
+}
+
+/* Dropdown Menu */
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+.dropbtn {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dropbtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: var(--card-bg);
+    min-width: 200px;
+    box-shadow: var(--shadow);
+    border-radius: 8px;
+    z-index: 1001;
+    top: 100%;
+    left: 0;
+    margin-top: 0.5rem;
+    overflow: hidden;
+}
+
+.dropdown-content.show {
+    display: block;
+}
+
+.dropdown-content a {
+    color: var(--text-color);
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    display: block;
+    transition: var(--transition);
+}
+
+.dropdown-content a:hover {
+    background: rgba(102, 126, 234, 0.1);
+    color: var(--primary-color);
+}
+
+.dropdown-content a.active {
+    background: rgba(102, 126, 234, 0.1);
+    color: var(--primary-color);
+    font-weight: 500;
+    border-left: 3px solid var(--primary-color);
+}
+
+.dropbtn::after {
+    content: '▼';
+    font-size: 0.8em;
+    transition: transform 0.3s ease;
+}
+
+.dropbtn.active::after {
+    transform: rotate(180deg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .visualizer {
+        grid-template-columns: 1fr;
+    }
+
+    .array-bars {
+        height: 200px;
+    }
+
+    .bar {
+        width: 30px;
+    }
+
+    .controls {
+        flex-wrap: wrap;
+    }
+    
+    .dropdown {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .dropdown-content {
+        width: 100%;
+        position: static;
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .dropbtn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Merge Sort Specific Styles */
+.bar.dividing {
+    background-color: rgba(255, 165, 0, 0.5);
+    transition: background-color 0.3s ease;
+}
+
+.bar.division-point {
+    background-color: rgba(255, 0, 0, 0.5);
+    transition: background-color 0.3s ease;
+}
+
+.bar.merging {
+    background-color: rgba(0, 255, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+.bar.key {
+    background-color: rgba(102, 126, 234, 0.8);
+    transition: background-color 0.3s ease;
+}
+
+.bar.comparing {
+    background-color: rgba(255, 165, 0, 0.8);
+    transition: background-color 0.3s ease;
+}
+
+.bar.sorted {
+    background-color: rgba(46, 204, 113, 0.8);
+    transition: background-color 0.3s ease;
+}
+
+/* Add smooth transitions for all bar states */
+.bar {
+    transition: all 0.3s ease;
+}
+
+/* Quick Sort Specific Styles */
+.bar.pivot {
+    background-color: rgba(255, 0, 0, 0.8);
+    transition: all 0.3s ease;
+}
+
+.bar.partition {
+    background-color: rgba(255, 165, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+.bar.comparing {
+    background-color: rgba(0, 255, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+.bar.swapping {
+    background-color: rgba(255, 0, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+.bar.sorted {
+    background-color: rgba(46, 204, 113, 0.8);
+    transition: all 0.3s ease;
+}
+
+/* Add smooth transitions for all bar states */
+.bar {
+    transition: all 0.3s ease;
+    transform-origin: bottom;
+}
+
+.bar.swapping {
+    animation: swap 0.5s ease;
+}
+
+@keyframes swap {
+    0% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(1.1);
+    }
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+.log-entry.success {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-left: 3px solid #28a745;
+}
+
+.log-entry.complexity {
+    background-color: rgba(102, 126, 234, 0.1);
+    border-left: 3px solid #667eea;
+} 

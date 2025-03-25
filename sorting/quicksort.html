@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Sort Visualization</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="sorting-styles.css">
+</head>
+<body>
+    <nav>
+        <a href="../home.html" class="logo">VisuAlgo</a>
+        <div class="controls">
+            <div class="dropdown">
+                <button class="dropbtn">Quick Sort</button>
+                <div class="dropdown-content">
+                    <a href="bubblesort.html">Bubble Sort</a>
+                    <a href="selectionsort.html">Selection Sort</a>
+                    <a href="mergesort.html">Merge Sort</a>
+                    <a href="quicksort.html" class="active">Quick Sort</a>
+                    <a href="insertionsort.html">Insertion Sort</a>
+                </div>
+            </div>
+            <button id="generateBtn" class="btn">Generate New Array</button>
+            <button id="startBtn" class="btn">Start</button>
+            <button id="pauseBtn" class="btn" disabled>Pause</button>
+            <button id="resetBtn" class="btn">Reset</button>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="comparisons">0</div>
+                <div class="stat-label">Comparisons</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="swaps">0</div>
+                <div class="stat-label">Swaps</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="time">0ms</div>
+                <div class="stat-label">Time</div>
+            </div>
+        </div>
+
+        <div class="controls-panel">
+            <div class="control-group">
+                <label for="arraySize">Array Size:</label>
+                <input type="number" id="arraySize" value="10" min="5" max="50">
+            </div>
+            <div class="control-group">
+                <label for="speed">Speed:</label>
+                <input type="range" id="speed" min="1" max="100" value="50">
+            </div>
+        </div>
+
+        <div class="visualizer">
+            <div class="array-container">
+                <h2>Array Visualization</h2>
+                <div class="array-bars" id="arrayBars"></div>
+            </div>
+            <div class="code-container">
+                <h2>Algorithm Code</h2>
+                <pre class="code-display" id="codeDisplay"></pre>
+            </div>
+        </div>
+        <div class="log-container">
+            <h2>Sorting Log</h2>
+            <div id="logEntries"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdown = document.querySelector('.dropdown');
+            const dropbtn = document.querySelector('.dropbtn');
+            const dropdownContent = document.querySelector('.dropdown-content');
+
+            dropbtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdownContent.classList.toggle('show');
+                dropbtn.classList.toggle('active');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!dropdown.contains(e.target)) {
+                    dropdownContent.classList.remove('show');
+                    dropbtn.classList.remove('active');
+                }
+            });
+
+            dropdownContent.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    dropdownContent.classList.remove('show');
+                    dropbtn.classList.remove('active');
+                }
+            });
+        });
+
+        class QuickSort {
+            constructor() {
+                this.array = [];
+                this.comparisons = 0;
+                this.swaps = 0;
+                this.startTime = 0;
+                this.isRunning = false;
+                this.isPaused = false;
+                this.currentStep = 0;
+                this.steps = [];
+                this.speed = 50;
+                this.arraySize = 10;
+
+                this.initializeElements();
+                this.attachEventListeners();
+                this.generateArray();
+            }
+
+            initializeElements() {
+                this.arrayBars = document.getElementById('arrayBars');
+                this.codeDisplay = document.getElementById('codeDisplay');
+                this.comparisonsDisplay = document.getElementById('comparisons');
+                this.swapsDisplay = document.getElementById('swaps');
+                this.timeDisplay = document.getElementById('time');
+                this.generateBtn = document.getElementById('generateBtn');
+                this.startBtn = document.getElementById('startBtn');
+                this.pauseBtn = document.getElementById('pauseBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.speedInput = document.getElementById('speed');
+                this.arraySizeInput = document.getElementById('arraySize');
+                this.logEntries = document.getElementById('logEntries');
+
+                // Initialize code display
+                this.initializeCodeDisplay();
+            }
+
+            initializeCodeDisplay() {
+                const code = `function quickSort(arr, left, right) {
+    if (left < right) {
+        // Find partition index
+        const pivotIndex = partition(arr, left, right);
+        
+        // Recursively sort elements before and after partition
+        quickSort(arr, left, pivotIndex - 1);
+        quickSort(arr, pivotIndex + 1, right);
+    }
+}
+function partition(arr, left, right) {
+    // Choose rightmost element as pivot
+    const pivot = arr[right];
+    let i = left - 1;
+    // Compare each element with pivot
+    for (let j = left; j < right; j++) {
+        if (arr[j] <= pivot) {
+            i++;
+            // Swap elements
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+    }
+    // Place pivot in correct position
+    [arr[i + 1], arr[right]] = [arr[right], arr[i + 1]];
+    return i + 1;
+}`;
+                
+                this.codeDisplay.innerHTML = code.split('\n').map((line, index) => 
+                    `<div class="code-line" data-line="${index}">${line}</div>`
+                ).join('');
+            }
+
+            highlightCodeLine(lineNumber) {
+                const lines = this.codeDisplay.querySelectorAll('.code-line');
+                lines.forEach(line => {
+                    line.classList.remove('active', 'highlight');
+                    line.style.backgroundColor = '';
+                });
+                
+                if (lineNumber >= 0 && lineNumber < lines.length) {
+                    lines[lineNumber].classList.add('active');
+                    lines[lineNumber].style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
+                }
+            }
+
+            attachEventListeners() {
+                this.generateBtn.addEventListener('click', () => this.generateArray());
+                this.startBtn.addEventListener('click', () => this.start());
+                this.pauseBtn.addEventListener('click', () => this.togglePause());
+                this.resetBtn.addEventListener('click', () => this.reset());
+                this.speedInput.addEventListener('input', (e) => this.speed = e.target.value);
+                this.arraySizeInput.addEventListener('change', (e) => {
+                    this.arraySize = parseInt(e.target.value);
+                    this.generateArray();
+                });
+            }
+
+            generateArray() {
+                this.array = Array.from({ length: this.arraySize }, () => 
+                    Math.floor(Math.random() * 100) + 1
+                );
+                this.updateBars();
+            }
+
+            updateBars() {
+                this.arrayBars.innerHTML = '';
+                const maxValue = Math.max(...this.array);
+                this.array.forEach((value, index) => {
+                    const bar = document.createElement('div');
+                    bar.className = 'bar';
+                    bar.style.height = `${(value / maxValue) * 100}%`;
+                    bar.innerHTML = `<div class="bar-label">${value}</div>`;
+                    this.arrayBars.appendChild(bar);
+                });
+            }
+
+            async start() {
+                if (this.isRunning) return;
+                
+                this.isRunning = true;
+                this.startTime = Date.now();
+                this.startBtn.disabled = true;
+                this.pauseBtn.disabled = false;
+                this.generateBtn.disabled = true;
+                this.arraySizeInput.disabled = true;
+
+                await this.quickSort(this.array, 0, this.array.length - 1);
+                
+                // Mark all bars as sorted
+                const bars = this.arrayBars.children;
+                Array.from(bars).forEach(bar => bar.classList.add('sorted'));
+                
+                // Add sorting completion message
+                this.addLogEntry('Sorting completed!🎉', 'success');
+                
+                // Add complexity information
+                this.addComplexityInfo();
+                
+                this.isRunning = false;
+                this.startBtn.disabled = false;
+                this.pauseBtn.disabled = true;
+                this.generateBtn.disabled = false;
+                this.arraySizeInput.disabled = false;
+            }
+
+            togglePause() {
+                this.isPaused = !this.isPaused;
+                this.pauseBtn.textContent = this.isPaused ? 'Resume' : 'Pause';
+            }
+
+            reset() {
+                this.isRunning = false;
+                this.isPaused = false;
+                this.comparisons = 0;
+                this.swaps = 0;
+                this.currentStep = 0;
+                this.startBtn.disabled = false;
+                this.pauseBtn.disabled = true;
+                this.generateBtn.disabled = false;
+                this.arraySizeInput.disabled = false;
+                this.pauseBtn.textContent = 'Pause';
+                this.updateStats();
+                this.generateArray();
+                
+                // Reset code highlighting
+                const lines = this.codeDisplay.querySelectorAll('.code-line');
+                lines.forEach(line => line.classList.remove('active', 'highlight'));
+                
+                // Clear log entries
+                this.logEntries.innerHTML = '';
+            }
+
+            async quickSort(arr, left, right) {
+                if (left < right) {
+                    this.highlightCodeLine(1); // Highlight quickSort function
+                    this.addLogEntry(`Sorting subarray from index ${left} to ${right}`, 'comparison');
+                    
+                    // Highlight current partition range
+                    for (let i = left; i <= right; i++) {
+                        this.highlightBars(i, null, 'partition');
+                    }
+                    await this.delay();
+                    
+                    const pivotIndex = await this.partition(arr, left, right);
+                    this.highlightCodeLine(3); // Highlight recursive calls
+                    
+                    await this.quickSort(arr, left, pivotIndex - 1);
+                    await this.quickSort(arr, pivotIndex + 1, right);
+                }
+            }
+
+            async partition(arr, left, right) {
+                const pivot = arr[right];
+                let i = left - 1;
+                
+                this.highlightCodeLine(6); // Highlight partition function
+                this.addLogEntry(`Choosing pivot: ${pivot} at index ${right}`, 'comparison');
+                
+                // Highlight pivot
+                this.highlightBars(right, null, 'pivot');
+                await this.delay();
+                
+                // Highlight partition range
+                for (let k = left; k < right; k++) {
+                    this.highlightBars(k, null, 'partition');
+                }
+                await this.delay();
+                
+                for (let j = left; j < right; j++) {
+                    if (this.isPaused) {
+                        await new Promise(resolve => {
+                            const checkPause = () => {
+                                if (!this.isPaused) {
+                                    resolve();
+                                } else {
+                                    setTimeout(checkPause, 100);
+                                }
+                            };
+                            checkPause();
+                        });
+                    }
+
+                    this.comparisons++;
+                    this.updateStats();
+                    
+                    // Highlight current element being compared
+                    this.highlightBars(j, right, 'comparing');
+                    this.highlightCodeLine(10); // Highlight comparison
+                    this.addLogEntry(`Comparing ${arr[j]} with pivot ${pivot}`, 'comparison');
+                    await this.delay();
+                    
+                    if (arr[j] <= pivot) {
+                        i++;
+                        this.swaps++;
+                        this.updateStats();
+                        
+                        // Swap elements with animation
+                        this.highlightBars(i, j, 'swapping');
+                        [arr[i], arr[j]] = [arr[j], arr[i]];
+                        this.highlightCodeLine(12); // Highlight swap
+                        this.addLogEntry(`Swapping ${arr[i]} and ${arr[j]}`, 'swap');
+                        
+                        this.updateBars();
+                        await this.delay();
+                    }
+                }
+                
+                // Place pivot in correct position with animation
+                this.swaps++;
+                this.updateStats();
+                this.highlightBars(i + 1, right, 'swapping');
+                [arr[i + 1], arr[right]] = [arr[right], arr[i + 1]];
+                this.highlightCodeLine(17); // Highlight pivot placement
+                this.addLogEntry(`Placing pivot ${pivot} at index ${i + 1}`, 'swap');
+                
+                this.updateBars();
+                await this.delay();
+                
+                // Mark pivot as sorted
+                this.markSorted(i + 1);
+                
+                return i + 1;
+            }
+
+            highlightBars(i, j = null, type = 'key') {
+                const bars = this.arrayBars.children;
+                Array.from(bars).forEach(bar => {
+                    bar.classList.remove('comparing', 'key', 'pivot', 'partition', 'swapping');
+                });
+                
+                // Highlight the current element
+                if (i >= 0) {
+                    bars[i].classList.add(type);
+                }
+                
+                // Highlight the element being compared
+                if (j !== null && j >= 0) {
+                    bars[j].classList.add('comparing');
+                }
+            }
+
+            markSorted(index) {
+                const bars = this.arrayBars.children;
+                bars[index].classList.add('sorted');
+            }
+
+            updateStats() {
+                this.comparisonsDisplay.textContent = this.comparisons;
+                this.swapsDisplay.textContent = this.swaps;
+                const timeElapsed = Date.now() - this.startTime;
+                this.timeDisplay.textContent = `${timeElapsed}ms`;
+            }
+
+            delay() {
+                return new Promise(resolve => 
+                    setTimeout(resolve, 1000 - this.speed * 10)
+                );
+            }
+
+            addLogEntry(message, type) {
+                const entry = document.createElement('div');
+                entry.className = `log-entry ${type}`;
+                
+                const timestamp = document.createElement('span');
+                timestamp.className = 'log-timestamp';
+                timestamp.textContent = new Date().toLocaleTimeString();
+                
+                const text = document.createElement('span');
+                text.textContent = message;
+                
+                entry.appendChild(timestamp);
+                entry.appendChild(text);
+                
+                this.logEntries.insertBefore(entry, this.logEntries.firstChild);
+                
+                // Keep only last 100 entries
+                if (this.logEntries.children.length > 100) {
+                    this.logEntries.removeChild(this.logEntries.lastChild);
+                }
+            }
+
+            addComplexityInfo() {
+                const complexityEntry = document.createElement('div');
+                complexityEntry.className = 'log-entry complexity';
+                
+                const timestamp = document.createElement('span');
+                timestamp.className = 'log-timestamp';
+                timestamp.textContent = new Date().toLocaleTimeString();
+                
+                const complexityInfo = document.createElement('div');
+                complexityInfo.className = 'complexity-info';
+                complexityInfo.innerHTML = `
+                    <div class="complexity-title">Algorithm Complexity Analysis:</div>
+                    <div class="complexity-details">
+                        <div>Time Complexity:</div>
+                        <ul>
+                            <li>Best Case: O(n log n) - when pivot divides array evenly</li>
+                            <li>Average Case: O(n log n) - for random arrays</li>
+                            <li>Worst Case: O(n²) - when array is already sorted or reverse sorted</li>
+                        </ul>
+                        <div>Space Complexity: O(log n) - recursion stack space</div>
+                        <div>Stable: No</div>
+                        <div>In-place: Yes</div>
+                        <div>Divide and Conquer: Yes</div>
+                    </div>
+                `;
+                
+                complexityEntry.appendChild(timestamp);
+                complexityEntry.appendChild(complexityInfo);
+                this.logEntries.insertBefore(complexityEntry, this.logEntries.firstChild);
+            }
+        }
+
+        // Initialize the visualization
+        const quickSort = new QuickSort();
+    </script>
+</body>
+</html>

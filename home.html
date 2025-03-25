@@ -3,195 +3,431 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home Page</title>
+  <title>Algorithm Visualizer - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    :root {
+      --primary-color: #667eea;
+      --secondary-color: #764ba2;
+      --text-color: #2d3748;
+      --bg-color: #f7fafc;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
       margin: 0;
       padding: 0;
-      background-color: #f4f4f9;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--bg-color) 0%, #e2e8f0 100%);
+      min-height: 100vh;
+      color: var(--text-color);
     }
 
     nav {
-            position: fixed;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+      z-index: 1000;
+    }
 
-            display: flex;
-            align-items: center; /* Align items vertically */
-            justify-content: space-between; /* Space out the home button and p tag */
-            padding: 15px 20px;
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+     
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: none;
+    }
 
-            top: 0;
-            left: 0;
-            width: 100%; /* Full width */
-            height: 8%;
-            background-color: #40cafc;
-            color: white; /* White text */
-            text-align: center;
-            font-size: 700%;
-            font-family: 'Dancing Script', 'Lucida Handwriting', cursive;
-            font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 1000; /* Ensure it stays on top of other content */
-            text-shadow:
-  1px 1px 2px rgb(55, 0, 255),
-  0 0 1em blue,
-  0 0 0.2em blue;
-            
-        }
-        .center-text {
-            flex: 1; /* Take up the remaining space */
-            text-align: center; /* Center the text horizontally */
-            margin: 0; /* Remove default margins */
-        
-        }
+    .nav-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-btn {
+      display: flex;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: var(--transition);
+      color: var(--text-color);
+    }
+
+    .dropdown-btn:hover {
+      background: rgba(102, 126, 234, 0.1);
+    }
+
+    .dropdown-content {
+      position: fixed;
+      top: 100%;
+      right: 0;
+      background: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 0.5rem;
+      min-width: 280px;
+      display: none;
+      animation: slideDown 0.3s ease;
+      z-index: 1001;
+      margin-top: 0.5rem;
+    }
+
+    .dropdown-content.show {
+      display: block;
+    }
+
+    .profile-section {
+      padding: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .profile-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary-color);
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-info h3 {
+      margin: 0;
+      color: var(--text-color);
+      font-size: 1.1rem;
+    }
+
+    .profile-info p {
+      margin: 0;
+      color: #4a5568;
+      font-size: 0.9rem;
+    }
+
+    .profile-actions {
+      display: flex;
+      justify-content: center;
+    }
+
+    .avatar-upload {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+
+    .avatar-upload:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background-color: #e2e8f0;
+      margin: 0.5rem 0;
+    }
+
+    .action-btn {
+      display: block;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: none;
+      background: none;
+      color: var(--text-color);
+      text-align: left;
+      cursor: pointer;
+      transition: var(--transition);
+      border-radius: 4px;
+    }
+
+    .action-btn:hover {
+      background: rgba(102, 126, 234, 0.1);
+      color: var(--primary-color);
+    }
+
+    #userName {
+      color: var(--text-color);
+      font-weight: 500;
+      margin-left: 0.5rem;
+    }
 
     .main {
-      padding: 1rem;
-      max-width: 70%;
-      margin: 0 auto;
-      margin-top: 200px;
-     
+      max-width: 1200px;
+      margin: 8rem auto 2rem;
+      padding: 0 1rem;
     }
 
     .search-bar {
-      margin-bottom: 1.5rem;
-      
+      margin-bottom: 3rem;
+      position: relative;
     }
 
     .search-bar input {
       width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 30px;
+      padding: 1rem 1.5rem;
+      padding-left: 3rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      transition: var(--transition);
+      background: var(--card-bg);
     }
 
-    
+    .search-bar input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .search-bar::before {
+      content: "🔍";
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: #a0aec0;
+    }
+
     .sections {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-      gap: 5rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 1rem;
     }
 
     .section {
-      background: rgb(112, 77, 239);
-      width: 100%;
-      border: 1px solid #ddd;
-      border-radius: 100px;
-      font-size: 50px;
-      padding: 1rem;
-      padding-bottom: 20%;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 2rem;
       text-decoration: none;
-   
+      color: var(--text-color);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
     }
 
     .section:hover {
-      transform: translateY(-10px);
-      box-shadow: rgba(107, 4, 241, 0.742) 0px 1px 1px 0px inset, rgba(5, 5, 251, 0.852) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .section:hover::before {
+      transform: scaleX(1);
     }
 
     .section h2 {
-      color: #f5f8fa;
-      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-color);
     }
 
     .section p {
-      color: #faf3f3;
+      color: #4a5568;
+      line-height: 1.6;
     }
 
     .footer {
-      background-color: #f4f4f9;
-      text-align: left;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #555;
-      border-top: 1px solid #ddd;
-    }
-   
-    
-
-    .dropdown {
-      position: relative;
-      display: inline-block;
-
+      text-align: center;
+      padding: 2rem;
+      background: var(--card-bg);
+      color: #4a5568;
+      margin-top: 4rem;
     }
 
-    .dropdown-btn {
-      background-color: #007bff;
-      color: rgb(254, 253, 253);
-      border: none;
-      padding: 20px 25px;
-      font-size: 20px;
-      border-radius: 5px;
-      cursor: pointer;
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .dropdown-btn:hover {
-      background-color: #0056b3;
+    /* Loading animation */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
     }
 
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: rgb(255, 255, 255);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
-      overflow: hidden;
-      z-index: 1000;
-      width: fit-content;
-
-     
-    }
-    
-    .dropdown:hover .dropdown-content {
-      display: block;
+    .loading::after {
+      content: "";
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e2e8f0;
+      border-top-color: var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
     }
 
-    .action-btn {
-        background-color: #762fd3;
-        color: white;
-        padding: 10px 15px;
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .main {
+        margin-top: 6rem;
+      }
+
+      .sections {
+        grid-template-columns: 1fr;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* Add these styles to your existing CSS */
+    .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin-right: 8px;
+        object-fit: cover;
+    }
+
+    /* Add these styles */
+    .name-edit-container {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .edit-btn {
+        background: none;
         border: none;
-        border-radius: 5px;
+        color: var(--primary-color);
         cursor: pointer;
-        font-size: 20px;
+        font-size: 1rem;
+        padding: 0.25rem;
+        border-radius: 4px;
+        transition: var(--transition);
     }
 
-    .action-btn:hover {
-        background-color: #ff4000;
+    .edit-btn:hover {
+        background: rgba(102, 126, 234, 0.1);
     }
 
+    .name-input {
+        font-size: 1.1rem;
+        padding: 0.25rem 0.5rem;
+        border: 1px solid var(--primary-color);
+        border-radius: 4px;
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .name-input:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+    }
   </style>
 </head>
 <body>
-    <Nav>
-        
-            <div class="dropdown">
-              <button class="dropdown-btn">Menu</button>
-              <div class="dropdown-content">
-                    <button id="logoutBtn" class="action-btn">Logout</button>
-                    <button id="deleteAccountBtn" class="action-btn">Delete Account</button>
+  <nav>
+    <h1 class="logo">VisuAlgo</h1>
+    <div class="nav-controls">
+      
+        <div class="dropdown">
+            <button class="dropdown-btn">
+                <img id="userAvatar" src="profile.png" alt="Profile" class="avatar">
+                <span id="userName">Settings</span>
+            </button>
+            <div class="dropdown-content">
+                <div class="profile-section">
+                    <div class="profile-header">
+                        <img id="profileAvatar" src="profile.png" alt="Profile" class="profile-avatar">
+                        <div class="profile-info">
+                            <div class="name-edit-container">
+                                <h3 id="profileName">User Name</h3>
+                                <button id="editNameBtn" class="edit-btn">✎</button>
+                            </div>
+                            <p id="profileEmail">user@email.com</p>
+                        </div>
+                    </div>
+                    <div class="profile-actions">
+                        <label for="avatarUpload" class="avatar-upload">
+                            <span>Change Avatar</span>
+                        </label>
+                        <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                    </div>
                 </div>
+                <div class="dropdown-divider"></div>
+                <button id="logoutBtn" class="action-btn">Logout</button>
+                <button id="deleteAccountBtn" class="action-btn">Delete Account</button>
             </div>
-        <p class="center-text">VisuAlgo</p>
-    </Nav>
-  
+        </div>
+    </div>
+  </nav>
+
   <div class="main" id="app">
-    <!-- Search Bar -->
     <div class="search-bar">
       <input 
         type="text" 
-        placeholder="Search algo to be visualized..." 
+        placeholder="Search algorithms..." 
         id="searchInput"
       >
     </div>
 
-    <!-- Sections -->
-      <div class="sections" id="sectionsContainer">
-        <!-- JavaScript will dynamically generate content here -->
-      </div>
+    <div class="sections" id="sectionsContainer">
+      <!-- Loading state -->
+      <div class="loading"></div>
+    </div>
   </div>
 
   <footer class="footer">
@@ -199,99 +435,269 @@
   </footer>
 
   <script>
+    // Check if user is logged in
     document.addEventListener('DOMContentLoaded', () => {
-      const sections = [
-        { name: 'Sorting Algorithms', description: 'Visualize different sorting techniques. <br> Bubble Sort..  Selection Sort.. <br> Merge Sort..    Quick Sort.. <br> Insertion Sort.. <br> ', link: '/bubblesort.html' },
-        { name: 'Pathfinding Algorithms', description: 'Learn about pathfinding methods.', link: '/pathfinding.html' },
-        { name: 'Graph Algorithms', description: 'Explore graph traversal and algorithms.', link: '/graph.html' },
-        { name: 'Dynamic Programming', description: 'Understand dynamic programming solutions.', link: '/dp.html' },
-        { name: 'Data Structures', description: 'Visualize various data structures.', link: '/data-structures.html' },
-        { name: 'Recursion', description: 'See recursion in action.', link: '/recursion.html' },
-        { name: 'Searching', description: 'See searchin in action.', link: '/searching.html' }
-      ];
+        const currentSession = localStorage.getItem('currentSession');
+        if (!currentSession) {
+            window.location.href = 'index.html';
+            return;
+        }
 
-      const searchInput = document.getElementById('searchInput');
-      const sectionsContainer = document.getElementById('sectionsContainer');
+        const sections = [
+          { 
+            name: 'Sorting Algorithms', 
+            description: 'Visualize different sorting techniques including Bubble Sort, Selection Sort, Merge Sort, Quick Sort, and Insertion Sort with step-by-step animations.',
+            link: '../sorting/bubblesort.html',
+            icon: '📊'
+          },
+          { 
+            name: 'Pathfinding Algorithms', 
+            description: 'Explore pathfinding algorithms like Dijkstra\'s and A* with interactive visualizations.',
+            link: '/pathfinding.html',
+            icon: '🗺️'
+          },
+          { 
+            name: 'Graph Algorithms', 
+            description: 'Learn about graph traversal algorithms including DFS, BFS, and more with visual demonstrations.',
+            link: '/graph.html',
+            icon: '📈'
+          },
+          { 
+            name: 'Dynamic Programming', 
+            description: 'Understand dynamic programming solutions with interactive examples and visualizations.',
+            link: '/dp.html',
+            icon: '⚡'
+          },
+          { 
+            name: 'Data Structures', 
+            description: 'Visualize various data structures including arrays, linked lists, trees, and more.',
+            link: '/data-structures.html',
+            icon: '🔷'
+          },
+          { 
+            name: 'Recursion', 
+            description: 'See recursion in action with visual representations of recursive algorithms.',
+            link: '/recursion.html',
+            icon: '🔄'
+          },
+          { 
+            name: 'Searching', 
+            description: 'Explore different searching algorithms with interactive visualizations.',
+            link: '/searching.html',
+            icon: '🔍'
+          }
+        ];
 
-      const renderSections = (filter = '') => {
-        sectionsContainer.innerHTML = '';
-        const filteredSections = sections.filter(section => 
-          section.name.toLowerCase().includes(filter.toLowerCase())
-        );
+        const searchInput = document.getElementById('searchInput');
+        const sectionsContainer = document.getElementById('sectionsContainer');
 
-        filteredSections.forEach(section => {
-          const sectionElement = document.createElement('a');
-          sectionElement.href = section.link;
-          sectionElement.className = 'section';
-          sectionElement.innerHTML = `
-            <h2>${section.name}</h2>
-            <p>${section.description}</p>
-          `;
-          sectionsContainer.appendChild(sectionElement);
+        const renderSections = (filter = '') => {
+          sectionsContainer.innerHTML = '';
+          const filteredSections = sections.filter(section => 
+            section.name.toLowerCase().includes(filter.toLowerCase()) ||
+            section.description.toLowerCase().includes(filter.toLowerCase())
+          );
+
+          if (filteredSections.length === 0) {
+            sectionsContainer.innerHTML = `
+              <div style="text-align: center; padding: 2rem; color: #4a5568;">
+                No algorithms found matching your search.
+              </div>
+            `;
+            return;
+          }
+
+          filteredSections.forEach(section => {
+            const sectionElement = document.createElement('a');
+            sectionElement.href = section.link;
+            sectionElement.className = 'section';
+            sectionElement.innerHTML = `
+              <h2>${section.icon} ${section.name}</h2>
+              <p>${section.description}</p>
+            `;
+            sectionsContainer.appendChild(sectionElement);
+          });
+        };
+
+        // Debounce search input
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
+            renderSections(e.target.value);
+          }, 300);
         });
-      };
 
-      searchInput.addEventListener('input', (e) => {
-        renderSections(e.target.value);
-      });
+        // Initial render
+        renderSections();
 
-      renderSections();
-
-    });
-    
-    document.addEventListener('DOMContentLoaded', () => {
-    const logoutBtn = document.getElementById('logoutBtn');
-    const deleteAccountBtn = document.getElementById('deleteAccountBtn');
-
-    // Helper function to get the current session
-    const getCurrentSession = () => {
-        const session = localStorage.getItem('currentSession');
-        return session ? JSON.parse(session) : null;
-    };
-
-    // Helper function to get all users from localStorage
-    const getUsers = () => {
-        const users = localStorage.getItem('users');
-        return users ? JSON.parse(users) : [];
-    };
-
-    // Logout functionality
-    logoutBtn.addEventListener('click', () => {
-        const currentSession = getCurrentSession();
-        if (currentSession) {
-            localStorage.removeItem('currentSession'); // Remove the session
-            alert('You have been logged out.');
-            window.location.href = 'login.html'; // Redirect to login page
-        } else {
-            alert('No active session found.');
-        }
-    });
-
-    // Delete Account functionality
-    deleteAccountBtn.addEventListener('click', () => {
-        const currentSession = getCurrentSession();
-        if (currentSession) {
-            const confirmDelete = confirm(
-                `Are you sure you want to delete your account (${currentSession.username})? This action cannot be undone.`
-            );
-            if (confirmDelete) {
-                // Remove the user from the users list
-                const users = getUsers();
-                const updatedUsers = users.filter(user => user.username !== currentSession.username);
-                localStorage.setItem('users', JSON.stringify(updatedUsers)); // Save updated user list
-
-                // Remove the current session
-                localStorage.removeItem('currentSession');
-                alert('Your account has been deleted.');
-                window.location.href = 'login.html'; // Redirect to login page
+        // Load user profile
+        const userSession = JSON.parse(localStorage.getItem('currentSession'));
+        if (userSession) {
+            // Update profile information
+            document.getElementById('userName').textContent = userSession.name || userSession.username;
+            document.getElementById('profileName').textContent = userSession.name || userSession.username;
+            document.getElementById('profileEmail').textContent = userSession.email || userSession.username + '@example.com';
+            
+            // Update avatars if available
+            if (userSession.picture) {
+                document.getElementById('userAvatar').src = userSession.picture;
+                document.getElementById('profileAvatar').src = userSession.picture;
             }
-        } else {
-            alert('No account data found to delete.');
         }
+
+        // Handle avatar upload
+        document.getElementById('avatarUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageUrl = e.target.result;
+                    // Update both avatars
+                    document.getElementById('userAvatar').src = imageUrl;
+                    document.getElementById('profileAvatar').src = imageUrl;
+                    
+                    // Save to localStorage
+                    const currentUserSession = JSON.parse(localStorage.getItem('currentSession'));
+                    if (currentUserSession) {
+                        currentUserSession.picture = imageUrl;
+                        localStorage.setItem('currentSession', JSON.stringify(currentUserSession));
+                        
+                        // Update user in users array
+                        const users = JSON.parse(localStorage.getItem('users') || '[]');
+                        const userIndex = users.findIndex(u => u.username === currentUserSession.username);
+                        if (userIndex !== -1) {
+                            users[userIndex].picture = imageUrl;
+                            localStorage.setItem('users', JSON.stringify(users));
+                        }
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+          localStorage.removeItem('currentSession');
+          window.location.href = 'index.html';
+        });
+
+        // Delete account functionality
+        document.getElementById('deleteAccountBtn').addEventListener('click', () => {
+          const currentSession = JSON.parse(localStorage.getItem('currentSession'));
+          if (currentSession) {
+            if (confirm(`Are you sure you want to delete your account (${currentSession.username})? This action cannot be undone.`)) {
+              const users = JSON.parse(localStorage.getItem('users') || '[]');
+              const updatedUsers = users.filter(user => user.username !== currentSession.username);
+
+              localStorage.setItem('users', JSON.stringify(updatedUsers));
+              localStorage.removeItem('currentSession');
+              window.location.href = 'index.html';
+            }
+          }
+        });
+
+        // Dropdown functionality
+        const dropdown = document.querySelector('.dropdown');
+        const dropdownContent = document.querySelector('.dropdown-content');
+        const dropdownBtn = document.querySelector('.dropdown-btn');
+
+        // Toggle dropdown on button click
+        dropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownContent.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) {
+                dropdownContent.classList.remove('show');
+            }
+        });
+
+        // Prevent dropdown from closing when clicking inside
+        dropdownContent.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Close dropdown when clicking action buttons
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                dropdownContent.classList.remove('show');
+            });
+        });
+
+        // Profile name editing functionality
+        const editNameBtn = document.getElementById('editNameBtn');
+        const profileName = document.getElementById('profileName');
+        const nameEditContainer = document.querySelector('.name-edit-container');
+
+        editNameBtn.addEventListener('click', () => {
+            const currentName = profileName.textContent;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentName;
+            input.className = 'name-input';
+            
+            const saveBtn = document.createElement('button');
+            saveBtn.textContent = '✓';
+            saveBtn.className = 'edit-btn';
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.textContent = '✕';
+            cancelBtn.className = 'edit-btn';
+
+            profileName.style.display = 'none';
+            editNameBtn.style.display = 'none';
+            
+            nameEditContainer.appendChild(input);
+            nameEditContainer.appendChild(saveBtn);
+            nameEditContainer.appendChild(cancelBtn);
+            
+            input.focus();
+            input.select();
+
+            const saveName = () => {
+                const newName = input.value.trim();
+                if (newName) {
+                    profileName.textContent = newName;
+                    document.getElementById('userName').textContent = newName;
+                    
+                    // Update localStorage
+                    const currentUserSession = JSON.parse(localStorage.getItem('currentSession'));
+                    if (currentUserSession) {
+                        currentUserSession.name = newName;
+                        localStorage.setItem('currentSession', JSON.stringify(currentUserSession));
+                        
+                        // Update user in users array
+                        const users = JSON.parse(localStorage.getItem('users') || '[]');
+                        const userIndex = users.findIndex(u => u.username === currentUserSession.username);
+                        if (userIndex !== -1) {
+                            users[userIndex].name = newName;
+                            localStorage.setItem('users', JSON.stringify(users));
+                        }
+                    }
+                }
+                resetNameEdit();
+            };
+
+            const resetNameEdit = () => {
+                profileName.style.display = 'block';
+                editNameBtn.style.display = 'block';
+                input.remove();
+                saveBtn.remove();
+                cancelBtn.remove();
+            };
+
+            saveBtn.addEventListener('click', saveName);
+            cancelBtn.addEventListener('click', resetNameEdit);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    saveName();
+                }
+            });
+        });
     });
-});
-
-
   </script>
 </body>
 </html>
