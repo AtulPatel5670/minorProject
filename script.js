@@ -199,7 +199,9 @@ function initializeGoogleSignIn() {
         callback: handleGoogleLogin,
         auto_select: false,
         cancel_on_tap_outside: true,
-        context: 'signin'
+        context: 'signin',
+        ux_mode: 'popup',
+        hosted_domain: window.location.hostname // This will work for both local and Vercel deployment
     });
 
     google.accounts.id.renderButton(
@@ -208,64 +210,33 @@ function initializeGoogleSignIn() {
     );
 }
 
-// Handle Google Login
-async function handleGoogleLogin(response) {
+// Handle Google Sign-In
+async function handleGoogleSignIn(response) {
     try {
         const payload = jwt_decode(response.credential);
-        
-        // Check if user already exists
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        const existingUser = users.find(u => u.email === payload.email);
+        console.log('Google Sign-In successful:', payload);
 
-        if (!existingUser) {
-            // Create new user
-            const newUser = {
-                username: payload.email.split('@')[0],
-                email: payload.email,
-                name: payload.name,
-                picture: payload.picture,
-                isGoogleUser: true
-            };
-            users.push(newUser);
-            localStorage.setItem('users', JSON.stringify(users));
-        }
-
-        // Set current session
-        const currentSession = {
-            username: payload.email.split('@')[0],
-            email: payload.email,
+        // Store user info in localStorage
+        localStorage.setItem('user', JSON.stringify({
             name: payload.name,
-            picture: payload.picture,
-            isGoogleUser: true
-        };
-        localStorage.setItem('currentSession', JSON.stringify(currentSession));
+            email: payload.email,
+            picture: payload.picture
+        }));
 
-        // Show success message and redirect
-        showSuccessMessage('Successfully logged in with Google!');
-        setTimeout(() => {
-            window.location.href = 'home.html';
-        }, 1500);
-
+        // Redirect to home page
+        window.location.href = 'home.html';
     } catch (error) {
-        console.error('Google login error:', error);
-        document.getElementById('error-message').textContent = 'Failed to login with Google. Please try again.';
+        console.error('Google Sign-In error:', error);
+        showError('Google Sign-In failed. Please try again.');
     }
 }
 
 // Initialize Google Sign-In when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-    // Check if user is already logged in
-    const currentSession = localStorage.getItem('currentSession');
-    if (currentSession) {
-        window.location.href = 'home.html';
-        return;
-    }
-
-    // Initialize Google Sign-In
-    if (typeof google !== 'undefined') {
+window.addEventListener('load', () => {
+    if (typeof google !== 'undefined' && google.accounts) {
         initializeGoogleSignIn();
+    } else {
+        console.error('Google Sign-In API not loaded');
     }
-
-    // Rest of your existing DOMContentLoaded code...
 });
 
