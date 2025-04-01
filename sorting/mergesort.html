@@ -52,7 +52,13 @@
             </div>
             <div class="control-group">
                 <label for="speed">Speed:</label>
-                <input type="range" id="speed" min="1" max="100" value="50">
+                <input type="range" id="speed" min="1" max="5" value="1">
+                <span id="speedValue">1</span>
+            </div>
+            <div class="control-group">
+                <label for="customArray">Custom Array:</label>
+                <input type="text" id="customArray" placeholder="Enter numbers separated by commas">
+                <button id="applyArray">Apply</button>
             </div>
         </div>
 
@@ -69,6 +75,31 @@
         <div class="log-container">
             <h2>Sorting Log</h2>
             <div id="logEntries"></div>
+        </div>
+    </div>
+
+    <div class="algorithm-description">
+        <h3>Algorithm Description</h3>
+        <div class="description-content">
+            <p>Merge Sort is a divide-and-conquer algorithm that divides the input array into two halves, recursively sorts the two halves, and then merges the sorted halves to produce the final sorted array.</p>
+            
+            <h4>Key Characteristics:</h4>
+            <ul>
+                <li>Time Complexity: O(n log n) in all cases</li>
+                <li>Space Complexity: O(n)</li>
+                <li>Stable: Yes</li>
+                <li>In-place: No</li>
+                <li>Adaptive: No (performance is same for all input orders)</li>
+            </ul>
+
+            <h4>How it Works:</h4>
+            <ol>
+                <li>Divide the array into two halves</li>
+                <li>Recursively sort the left half</li>
+                <li>Recursively sort the right half</li>
+                <li>Merge the sorted halves</li>
+                <li>Repeat until the entire array is sorted</li>
+            </ol>
         </div>
     </div>
 

@@ -61,7 +61,7 @@ body::before {
     border-radius: 15px;
     width: 90%;
     max-width: 400px;
-    margin: 6rem auto;
+    margin: 10rem auto;
     backdrop-filter: blur(10px);
     transform: translateY(0);
     transition: transform 0.3s ease, box-shadow 0.3s ease;

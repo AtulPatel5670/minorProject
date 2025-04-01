@@ -30,9 +30,9 @@
     }
 
     nav {
-      position: fixed;
-      top: 0;
-      left: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
       width: 100%;
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
@@ -183,7 +183,7 @@
       color: var(--text-color);
       font-weight: 500;
       margin-left: 0.5rem;
-    }
+        }
 
     .main {
       max-width: 1200px;
@@ -222,7 +222,7 @@
       font-size: 1.2rem;
       color: #a0aec0;
     }
-
+    
     .sections {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -382,13 +382,13 @@
   <nav>
     <h1 class="logo">VisuAlgo</h1>
     <div class="nav-controls">
-      
-        <div class="dropdown">
+        
+            <div class="dropdown">
             <button class="dropdown-btn">
                 <img id="userAvatar" src="profile.png" alt="Profile" class="avatar">
                 <span id="userName">Settings</span>
             </button>
-            <div class="dropdown-content">
+              <div class="dropdown-content">
                 <div class="profile-section">
                     <div class="profile-header">
                         <img id="profileAvatar" src="profile.png" alt="Profile" class="profile-avatar">
@@ -408,13 +408,13 @@
                     </div>
                 </div>
                 <div class="dropdown-divider"></div>
-                <button id="logoutBtn" class="action-btn">Logout</button>
-                <button id="deleteAccountBtn" class="action-btn">Delete Account</button>
+                    <button id="logoutBtn" class="action-btn">Logout</button>
+                    <button id="deleteAccountBtn" class="action-btn">Delete Account</button>
+                </div>
             </div>
-        </div>
     </div>
   </nav>
-
+  
   <div class="main" id="app">
     <div class="search-bar">
       <input 
@@ -424,10 +424,10 @@
       >
     </div>
 
-    <div class="sections" id="sectionsContainer">
+      <div class="sections" id="sectionsContainer">
       <!-- Loading state -->
       <div class="loading"></div>
-    </div>
+      </div>
   </div>
 
   <footer class="footer">
@@ -443,7 +443,7 @@
             return;
         }
 
-        const sections = [
+      const sections = [
           { 
             name: 'Sorting Algorithms', 
             description: 'Visualize different sorting techniques including Bubble Sort, Selection Sort, Merge Sort, Quick Sort, and Insertion Sort with step-by-step animations.',
@@ -486,14 +486,14 @@
             link: '/searching.html',
             icon: '🔍'
           }
-        ];
+      ];
 
-        const searchInput = document.getElementById('searchInput');
-        const sectionsContainer = document.getElementById('sectionsContainer');
+      const searchInput = document.getElementById('searchInput');
+      const sectionsContainer = document.getElementById('sectionsContainer');
 
-        const renderSections = (filter = '') => {
-          sectionsContainer.innerHTML = '';
-          const filteredSections = sections.filter(section => 
+      const renderSections = (filter = '') => {
+        sectionsContainer.innerHTML = '';
+        const filteredSections = sections.filter(section => 
             section.name.toLowerCase().includes(filter.toLowerCase()) ||
             section.description.toLowerCase().includes(filter.toLowerCase())
           );
@@ -507,29 +507,29 @@
             return;
           }
 
-          filteredSections.forEach(section => {
-            const sectionElement = document.createElement('a');
-            sectionElement.href = section.link;
-            sectionElement.className = 'section';
-            sectionElement.innerHTML = `
+        filteredSections.forEach(section => {
+          const sectionElement = document.createElement('a');
+          sectionElement.href = section.link;
+          sectionElement.className = 'section';
+          sectionElement.innerHTML = `
               <h2>${section.icon} ${section.name}</h2>
-              <p>${section.description}</p>
-            `;
-            sectionsContainer.appendChild(sectionElement);
-          });
-        };
+            <p>${section.description}</p>
+          `;
+          sectionsContainer.appendChild(sectionElement);
+        });
+      };
 
         // Debounce search input
         let searchTimeout;
-        searchInput.addEventListener('input', (e) => {
+      searchInput.addEventListener('input', (e) => {
           clearTimeout(searchTimeout);
           searchTimeout = setTimeout(() => {
-            renderSections(e.target.value);
+        renderSections(e.target.value);
           }, 300);
-        });
+      });
 
         // Initial render
-        renderSections();
+      renderSections();
 
         // Load user profile
         const userSession = JSON.parse(localStorage.getItem('currentSession'));
@@ -537,7 +537,7 @@
             // Update profile information
             document.getElementById('userName').textContent = userSession.name || userSession.username;
             document.getElementById('profileName').textContent = userSession.name || userSession.username;
-            document.getElementById('profileEmail').textContent = userSession.email || userSession.username + '@example.com';
+            document.getElementById('profileEmail').textContent = userSession.email || userSession.username + '@gmail.com';
             
             // Update avatars if available
             if (userSession.picture) {
@@ -576,7 +576,7 @@
             }
         });
 
-        // Logout functionality
+    // Logout functionality
         document.getElementById('logoutBtn').addEventListener('click', () => {
           localStorage.removeItem('currentSession');
           window.location.href = 'index.html';
@@ -585,7 +585,7 @@
         // Delete account functionality
         document.getElementById('deleteAccountBtn').addEventListener('click', () => {
           const currentSession = JSON.parse(localStorage.getItem('currentSession'));
-          if (currentSession) {
+        if (currentSession) {
             if (confirm(`Are you sure you want to delete your account (${currentSession.username})? This action cannot be undone.`)) {
               const users = JSON.parse(localStorage.getItem('users') || '[]');
               const updatedUsers = users.filter(user => user.username !== currentSession.username);
@@ -694,9 +694,9 @@
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     saveName();
-                }
-            });
-        });
+        }
+    });
+});
     });
   </script>
 </body>

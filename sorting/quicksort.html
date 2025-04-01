@@ -52,7 +52,13 @@
             </div>
             <div class="control-group">
                 <label for="speed">Speed:</label>
-                <input type="range" id="speed" min="1" max="100" value="50">
+                <input type="range" id="speed" min="1" max="5" value="1">
+                <span id="speedValue">1</span>
+            </div>
+            <div class="control-group">
+                <label for="customArray">Custom Array:</label>
+                <input type="text" id="customArray" placeholder="Enter numbers separated by commas">
+                <button id="applyArray">Apply</button>
             </div>
         </div>
 
@@ -69,6 +75,31 @@
         <div class="log-container">
             <h2>Sorting Log</h2>
             <div id="logEntries"></div>
+        </div>
+    </div>
+
+    <div class="algorithm-description">
+        <h3>Algorithm Description</h3>
+        <div class="description-content">
+            <p>Quick Sort is a divide-and-conquer algorithm that picks a 'pivot' element and partitions the array around it, placing smaller elements to the left and larger elements to the right, then recursively sorts the sub-arrays.</p>
+            
+            <h4>Key Characteristics:</h4>
+            <ul>
+                <li>Time Complexity: O(n log n) average case, O(n²) worst case</li>
+                <li>Space Complexity: O(log n)</li>
+                <li>Stable: No</li>
+                <li>In-place: Yes</li>
+                <li>Adaptive: Yes (performance varies with input order)</li>
+            </ul>
+
+            <h4>How it Works:</h4>
+            <ol>
+                <li>Choose a pivot element</li>
+                <li>Partition the array around the pivot</li>
+                <li>Recursively sort the left sub-array</li>
+                <li>Recursively sort the right sub-array</li>
+                <li>Combine the results</li>
+            </ol>
         </div>
     </div>
 

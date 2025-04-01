@@ -52,7 +52,13 @@
             </div>
             <div class="control-group">
                 <label for="speed">Speed:</label>
-                <input type="range" id="speed" min="1" max="100" value="50">
+                <input type="range" id="speed" min="1" max="5" value="1">
+                <span id="speedValue">1</span>
+            </div>
+            <div class="control-group">
+                <label for="customArray">Custom Array:</label>
+                <input type="text" id="customArray" placeholder="Enter numbers separated by commas">
+                <button id="applyArray">Apply</button>
             </div>
         </div>
 
@@ -69,6 +75,30 @@
         <div class="log-container">
             <h2>Sorting Log</h2>
             <div id="logEntries"></div>
+        </div>
+    </div>
+
+    <div class="algorithm-description">
+        <h3>Algorithm Description</h3>
+        <div class="description-content">
+            <p>Selection Sort is an in-place comparison sorting algorithm that divides the input list into a sorted and an unsorted region, and iteratively selects the smallest element from the unsorted region to add to the sorted region.</p>
+            
+            <h4>Key Characteristics:</h4>
+            <ul>
+                <li>Time Complexity: O(n²) in all cases</li>
+                <li>Space Complexity: O(1)</li>
+                <li>Stable: No</li>
+                <li>In-place: Yes</li>
+                <li>Adaptive: No (performance is same for all input orders)</li>
+            </ul>
+
+            <h4>How it Works:</h4>
+            <ol>
+                <li>Find the minimum element in the unsorted array</li>
+                <li>Swap it with the first element of the unsorted array</li>
+                <li>Move the boundary of the sorted array one position right</li>
+                <li>Repeat until the entire array is sorted</li>
+            </ol>
         </div>
     </div>
 

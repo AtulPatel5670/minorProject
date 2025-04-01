@@ -52,7 +52,13 @@
             </div>
             <div class="control-group">
                 <label for="speed">Speed:</label>
-                <input type="range" id="speed" min="1" max="100" value="50">
+                <input type="range" id="speed" min="1" max="10" value="1">
+                <span id="speedValue">1</span>
+            </div>
+            <div class="control-group">
+                <label for="customArray">Custom Array:</label>
+                <input type="text" id="customArray" placeholder="Enter numbers separated by commas">
+                <button id="applyArray">Apply</button>
             </div>
         </div>
 
@@ -69,6 +75,31 @@
         <div class="log-container">
             <h2>Sorting Log</h2>
             <div id="logEntries"></div>
+        </div>
+    </div>
+
+    <div class="algorithm-description">
+        <h3>Algorithm Description</h3>
+        <div class="description-content">
+            <p>Bubble Sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order. The pass through the list is repeated until no more swaps are needed, which indicates that the list is sorted.</p>
+            
+            <h4>Key Characteristics:</h4>
+            <ul>
+                <li>Time Complexity: O(n²) in worst and average cases, O(n) in best case</li>
+                <li>Space Complexity: O(1)</li>
+                <li>Stable: Yes</li>
+                <li>In-place: Yes</li>
+                <li>Adaptive: Yes (can detect if array is already sorted)</li>
+            </ul>
+
+            <h4>How it Works:</h4>
+            <ol>
+                <li>Start from the first element, compare it with the next element</li>
+                <li>If the first element is greater than the second, swap them</li>
+                <li>Move to the next pair of elements and repeat</li>
+                <li>After each pass, the largest element "bubbles up" to the end</li>
+                <li>Repeat until no more swaps are needed</li>
+            </ol>
         </div>
     </div>
 
@@ -102,19 +133,17 @@
         class BubbleSort {
             constructor() {
                 this.array = [];
+                this.arraySize = 10;
+                this.isRunning = false;
+                this.isPaused = false;
                 this.comparisons = 0;
                 this.swaps = 0;
                 this.startTime = 0;
-                this.isRunning = false;
-                this.isPaused = false;
-                this.currentStep = 0;
-                this.steps = [];
-                this.speed = 50;
-                this.arraySize = 10;
-
+                this.speed = 10;
                 this.initializeElements();
-                this.attachEventListeners();
+                this.initializeEventListeners();
                 this.generateArray();
+                this.initializeCodeDisplay();
             }
 
             initializeElements() {
@@ -130,38 +159,11 @@
                 this.speedInput = document.getElementById('speed');
                 this.arraySizeInput = document.getElementById('arraySize');
                 this.logEntries = document.getElementById('logEntries');
-
-                // Initialize code display
-                this.initializeCodeDisplay();
+                this.customArrayInput = document.getElementById('customArray');
+                this.applyArrayBtn = document.getElementById('applyArray');
             }
 
-            initializeCodeDisplay() {
-                const code = `function bubbleSort(arr) {
-    const n = arr.length;
-    for (let i = 0; i < n - 1; i++) {
-        for (let j = 0; j < n - i - 1; j++) {
-            // Compare adjacent elements
-            if (arr[j] > arr[j + 1]) {
-                // Swap if they are in wrong order
-                [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-            }
-        }
-    }
-    return arr;
-}`;
-                
-                this.codeDisplay.innerHTML = code.split('\n').map((line, index) => 
-                    `<div class="code-line" data-line="${index}">${line}</div>`
-                ).join('');
-            }
-
-            highlightCodeLine(lineNumber) {
-                const lines = this.codeDisplay.querySelectorAll('.code-line');
-                lines.forEach(line => line.classList.remove('active', 'highlight'));
-                lines[lineNumber]?.classList.add('active');
-            }
-
-            attachEventListeners() {
+            initializeEventListeners() {
                 this.generateBtn.addEventListener('click', () => this.generateArray());
                 this.startBtn.addEventListener('click', () => this.start());
                 this.pauseBtn.addEventListener('click', () => this.togglePause());
@@ -171,6 +173,7 @@
                     this.arraySize = parseInt(e.target.value);
                     this.generateArray();
                 });
+                this.applyArrayBtn.addEventListener('click', () => this.applyCustomArray());
             }
 
             generateArray() {
@@ -364,6 +367,60 @@
                 if (this.logEntries.children.length > 100) {
                     this.logEntries.removeChild(this.logEntries.lastChild);
                 }
+            }
+
+            applyCustomArray() {
+                const input = this.customArrayInput.value.trim();
+                if (!input) {
+                    this.addLogEntry('Please enter numbers separated by commas', 'error');
+                    return;
+                }
+
+                try {
+                    const numbers = input.split(',').map(num => parseInt(num.trim()));
+                    if (numbers.some(num => isNaN(num))) {
+                        throw new Error('Invalid numbers');
+                    }
+                    if (numbers.length < 2) {
+                        throw new Error('Array must have at least 2 elements');
+                    }
+                    if (numbers.length > 50) {
+                        throw new Error('Array cannot have more than 50 elements');
+                    }
+
+                    this.array = numbers;
+                    this.arraySize = numbers.length;
+                    this.updateBars();
+                    this.addLogEntry('Custom array applied successfully', 'success');
+                } catch (error) {
+                    this.addLogEntry(error.message, 'error');
+                }
+            }
+
+            initializeCodeDisplay() {
+                const code = `function bubbleSort(arr) {
+    const n = arr.length;
+    for (let i = 0; i < n - 1; i++) {
+        for (let j = 0; j < n - i - 1; j++) {
+            // Compare adjacent elements
+            if (arr[j] > arr[j + 1]) {
+                // Swap if they are in wrong order
+                [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+            }
+        }
+    }
+    return arr;
+}`;
+                
+                this.codeDisplay.innerHTML = code.split('\n').map((line, index) => 
+                    `<div class="code-line" data-line="${index}">${line}</div>`
+                ).join('');
+            }
+
+            highlightCodeLine(lineNumber) {
+                const lines = this.codeDisplay.querySelectorAll('.code-line');
+                lines.forEach(line => line.classList.remove('active', 'highlight'));
+                lines[lineNumber]?.classList.add('active');
             }
         }
 
