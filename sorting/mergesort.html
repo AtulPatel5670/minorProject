@@ -140,7 +140,7 @@
                 this.isPaused = false;
                 this.currentStep = 0;
                 this.steps = [];
-                this.speed = 50;
+                this.speed = 1;
                 this.arraySize = 10;
 
                 this.initializeElements();
@@ -167,69 +167,43 @@
             }
 
             initializeCodeDisplay() {
-                const code = `function mergeSort(arr, left, right) {
-    if (left < right) {
-        const mid = Math.floor((left + right) / 2);
-        // Recursively sort first and second halves
-        mergeSort(arr, left, mid);
-        mergeSort(arr, mid + 1, right);
-        // Merge the sorted halves
-        merge(arr, left, mid, right);
-    }
-}
-function merge(arr, left, mid, right) {
-    // Create temporary arrays
-    const n1 = mid - left + 1;
-    const n2 = right - mid;
-    const leftArr = new Array(n1);
-    const rightArr = new Array(n2);
-    // Copy data to temporary arrays
-    for (let i = 0; i < n1; i++)
-        leftArr[i] = arr[left + i];
-    for (let j = 0; j < n2; j++)
-        rightArr[j] = arr[mid + 1 + j]; 
-    // Merge the temporary arrays back
-    let i = 0, j = 0, k = left;
-    while (i < n1 && j < n2) {
-        if (leftArr[i] <= rightArr[j]) {
-            arr[k] = leftArr[i];
-            i++;
-        } else {
-            arr[k] = rightArr[j];
-            j++;
-        }
-        k++;
-    } 
-    // Copy remaining elements of leftArr if any
-    while (i < n1) {
-        arr[k] = leftArr[i];
-        i++;
-        k++;
-    }
-    // Copy remaining elements of rightArr if any
-    while (j < n2) {
-        arr[k] = rightArr[j];
-        j++;
-        k++;
-    }
-}`;
-                
-                this.codeDisplay.innerHTML = code.split('\n').map((line, index) => 
-                    `<div class="code-line" data-line="${index}">${line}</div>`
-                ).join('');
+                // Algorithm code for display
+                const algorithmCode = `<div class="code-line"><span class="keyword">function</span> <span class="function">mergeSort</span>(<span class="variable">arr</span>) {</div>
+<div class="code-line">    <span class="keyword">if</span> (<span class="variable">arr</span>.<span class="function">length</span> <= <span class="number">1</span>) {</div>
+<div class="code-line">        <span class="keyword">return</span> <span class="variable">arr</span>;</div>
+<div class="code-line">    }</div>
+<div class="code-line">    <span class="keyword">const</span> <span class="variable">mid</span> = <span class="variable">arr</span>.<span class="function">length</span> / <span class="number">2</span>;</div>
+<div class="code-line">    <span class="keyword">const</span> <span class="variable">left</span> = <span class="variable">arr</span>.<span class="function">slice</span>(<span class="number">0</span>, <span class="variable">mid</span>);</div>
+<div class="code-line">    <span class="keyword">const</span> <span class="variable">right</span> = <span class="variable">arr</span>.<span class="function">slice</span>(<span class="variable">mid</span>);</div>
+<div class="code-line">    <span class="keyword">return</span> <span class="function">merge</span>(<span class="function">mergeSort</span>(<span class="variable">left</span>), <span class="function">mergeSort</span>(<span class="variable">right</span>));</div>
+<div class="code-line">}</div>
+<div class="code-line"></div>
+<div class="code-line"><span class="keyword">function</span> <span class="function">merge</span>(<span class="variable">left</span>, <span class="variable">right</span>) {</div>
+<div class="code-line">    <span class="keyword">let</span> <span class="variable">result</span> = [];</div>
+<div class="code-line">    <span class="keyword">let</span> <span class="variable">i</span> = <span class="number">0</span>, <span class="variable">j</span> = <span class="number">0</span>;</div>
+<div class="code-line">    <span class="keyword">while</span> (<span class="variable">i</span> < <span class="variable">left</span>.<span class="function">length</span> && <span class="variable">j</span> < <span class="variable">right</span>.<span class="function">length</span>) {</div>
+<div class="code-line">        <span class="keyword">if</span> (<span class="variable">left</span>[<span class="variable">i</span>] <= <span class="variable">right</span>[<span class="variable">j</span>]) {</div>
+<div class="code-line">            <span class="variable">result</span>.<span class="function">push</span>(<span class="variable">left</span>[<span class="variable">i</span>]);</div>
+<div class="code-line">            <span class="variable">i</span>++;</div>
+<div class="code-line">        } <span class="keyword">else</span> {</div>
+<div class="code-line">            <span class="variable">result</span>.<span class="function">push</span>(<span class="variable">right</span>[<span class="variable">j</span>]);</div>
+<div class="code-line">            <span class="variable">j</span>++;</div>
+<div class="code-line">        }</div>
+<div class="code-line">    }</div>
+<div class="code-line">    <span class="keyword">return</span> [...<span class="variable">result</span>, ...<span class="variable">left</span>.<span class="function">slice</span>(<span class="variable">i</span>), ...<span class="variable">right</span>.<span class="function">slice</span>(<span class="variable">j</span>)];</div>
+<div class="code-line">}</div>`;
+
+                this.codeDisplay.innerHTML = algorithmCode;
             }
 
             highlightCodeLine(lineNumber) {
                 const lines = this.codeDisplay.querySelectorAll('.code-line');
-                lines.forEach(line => {
+                lines.forEach((line, index) => {
                     line.classList.remove('active', 'highlight');
-                    line.style.backgroundColor = '';
+                    if (index === lineNumber) {
+                        line.classList.add('active');
+                    }
                 });
-                
-                if (lineNumber >= 0 && lineNumber < lines.length) {
-                    lines[lineNumber].classList.add('active');
-                    lines[lineNumber].style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
-                }
             }
 
             attachEventListeners() {
@@ -237,7 +211,10 @@ function merge(arr, left, mid, right) {
                 this.startBtn.addEventListener('click', () => this.start());
                 this.pauseBtn.addEventListener('click', () => this.togglePause());
                 this.resetBtn.addEventListener('click', () => this.reset());
-                this.speedInput.addEventListener('input', (e) => this.speed = e.target.value);
+                this.speedInput.addEventListener('input', (e) => {
+                    this.speed = parseInt(e.target.value);
+                    document.getElementById('speedValue').textContent = this.speed;
+                });
                 this.arraySizeInput.addEventListener('change', (e) => {
                     this.arraySize = parseInt(e.target.value);
                     this.generateArray();
@@ -318,7 +295,7 @@ function merge(arr, left, mid, right) {
                     this.markSorted(i);
                 }
                 
-                this.highlightCodeLine(32); // Highlight end of merge function
+                this.highlightCodeLine(23); // Highlight end of merge function
                 this.addLogEntry('Sorting completed!🎉', 'sorted');
                 
                 // Add complexity information
@@ -329,7 +306,7 @@ function merge(arr, left, mid, right) {
                 if (left >= right) return;
                 
                 const mid = Math.floor((left + right) / 2);
-                this.highlightCodeLine(2); // Highlight mid calculation
+                this.highlightCodeLine(4); // Highlight mid calculation
                 this.addLogEntry(`Dividing array from index ${left} to ${right}`, 'comparison');
                 
                 // Visualize the division
@@ -367,7 +344,7 @@ function merge(arr, left, mid, right) {
                 const leftArr = new Array(n1);
                 const rightArr = new Array(n2);
                 
-                this.highlightCodeLine(7); // Highlight array creation
+                this.highlightCodeLine(10); // Highlight array creation
                 this.addLogEntry(`Creating temporary arrays for merging`, 'comparison');
                 
                 // Copy data to temporary arrays
@@ -383,12 +360,12 @@ function merge(arr, left, mid, right) {
                     await this.delay();
                 }
                 
-                this.highlightCodeLine(12); // Highlight copying to temp arrays
+                this.highlightCodeLine(13); // Highlight copying to temp arrays
                 
                 // Merge the temporary arrays back
                 let i = 0, j = 0, k = left;
                 
-                this.highlightCodeLine(15); // Highlight merge loop
+                this.highlightCodeLine(14); // Highlight merge loop
                 this.addLogEntry(`Merging subarrays from index ${left} to ${right}`, 'comparison');
                 
                 while (i < n1 && j < n2) {
@@ -410,21 +387,21 @@ function merge(arr, left, mid, right) {
                     
                     // Highlight the current elements being compared
                     this.highlightBars(left + i, mid + 1 + j);
-                    this.highlightCodeLine(17); // Highlight comparison
+                    this.highlightCodeLine(15); // Highlight comparison
                     this.addLogEntry(`Comparing ${leftArr[i]} with ${rightArr[j]}`, 'comparison');
 
                     if (leftArr[i] <= rightArr[j]) {
                         arr[k] = leftArr[i];
                         this.swaps++;
                         this.updateStats();
-                        this.highlightCodeLine(18); // Highlight left array element selection
+                        this.highlightCodeLine(16); // Highlight left array element selection
                         this.addLogEntry(`Selected ${leftArr[i]} from left subarray`, 'swap');
                         i++;
                     } else {
                         arr[k] = rightArr[j];
                         this.swaps++;
                         this.updateStats();
-                        this.highlightCodeLine(21); // Highlight right array element selection
+                        this.highlightCodeLine(19); // Highlight right array element selection
                         this.addLogEntry(`Selected ${rightArr[j]} from right subarray`, 'swap');
                         j++;
                     }
@@ -438,7 +415,7 @@ function merge(arr, left, mid, right) {
                     arr[k] = leftArr[i];
                     this.swaps++;
                     this.updateStats();
-                    this.highlightCodeLine(26); // Highlight remaining left elements
+                    this.highlightCodeLine(22); // Highlight remaining left elements
                     this.addLogEntry(`Adding remaining element ${leftArr[i]} from left subarray`, 'swap');
                     this.highlightBars(left + i);
                     i++;
@@ -452,7 +429,7 @@ function merge(arr, left, mid, right) {
                     arr[k] = rightArr[j];
                     this.swaps++;
                     this.updateStats();
-                    this.highlightCodeLine(30); // Highlight remaining right elements
+                    this.highlightCodeLine(25); // Highlight remaining right elements
                     this.addLogEntry(`Adding remaining element ${rightArr[j]} from right subarray`, 'swap');
                     this.highlightBars(mid + 1 + j);
                     j++;
@@ -491,7 +468,7 @@ function merge(arr, left, mid, right) {
 
             delay() {
                 return new Promise(resolve => 
-                    setTimeout(resolve, 1000 - this.speed * 10)
+                    setTimeout(resolve, 2000 - (this.speed * 300))
                 );
             }
 

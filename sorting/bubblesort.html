@@ -52,7 +52,7 @@
             </div>
             <div class="control-group">
                 <label for="speed">Speed:</label>
-                <input type="range" id="speed" min="1" max="10" value="1">
+                <input type="range" id="speed" min="1" max="5" value="1">
                 <span id="speedValue">1</span>
             </div>
             <div class="control-group">
@@ -139,9 +139,9 @@
                 this.comparisons = 0;
                 this.swaps = 0;
                 this.startTime = 0;
-                this.speed = 10;
+                this.speed = 1;
                 this.initializeElements();
-                this.initializeEventListeners();
+                this.attachEventListeners();
                 this.generateArray();
                 this.initializeCodeDisplay();
             }
@@ -163,12 +163,15 @@
                 this.applyArrayBtn = document.getElementById('applyArray');
             }
 
-            initializeEventListeners() {
+            attachEventListeners() {
                 this.generateBtn.addEventListener('click', () => this.generateArray());
                 this.startBtn.addEventListener('click', () => this.start());
                 this.pauseBtn.addEventListener('click', () => this.togglePause());
                 this.resetBtn.addEventListener('click', () => this.reset());
-                this.speedInput.addEventListener('input', (e) => this.speed = e.target.value);
+                this.speedInput.addEventListener('input', (e) => {
+                    this.speed = parseInt(e.target.value);
+                    document.getElementById('speedValue').textContent = this.speed;
+                });
                 this.arraySizeInput.addEventListener('change', (e) => {
                     this.arraySize = parseInt(e.target.value);
                     this.generateArray();
@@ -343,7 +346,7 @@
 
             delay() {
                 return new Promise(resolve => 
-                    setTimeout(resolve, 1000 - this.speed * 10)
+                    setTimeout(resolve, 2000 - (this.speed * 300))
                 );
             }
 
@@ -398,29 +401,31 @@
             }
 
             initializeCodeDisplay() {
-                const code = `function bubbleSort(arr) {
-    const n = arr.length;
-    for (let i = 0; i < n - 1; i++) {
-        for (let j = 0; j < n - i - 1; j++) {
-            // Compare adjacent elements
-            if (arr[j] > arr[j + 1]) {
-                // Swap if they are in wrong order
-                [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-            }
-        }
-    }
-    return arr;
-}`;
-                
-                this.codeDisplay.innerHTML = code.split('\n').map((line, index) => 
-                    `<div class="code-line" data-line="${index}">${line}</div>`
-                ).join('');
+                // Algorithm code for display
+                const algorithmCode = `<div class="code-line"><span class="keyword">function</span> <span class="function">bubbleSort</span>(<span class="variable">arr</span>) {</div>
+<div class="code-line">    <span class="keyword">for</span> (<span class="keyword">let</span> <span class="variable">i</span> = <span class="number">0</span>; <span class="variable">i</span> < <span class="variable">arr</span>.<span class="function">length</span> - <span class="number">1</span>; <span class="variable">i</span>++) {</div>
+<div class="code-line">        <span class="keyword">for</span> (<span class="keyword">let</span> <span class="variable">j</span> = <span class="number">0</span>; <span class="variable">j</span> < <span class="variable">arr</span>.<span class="function">length</span> - <span class="variable">i</span> - <span class="number">1</span>; <span class="variable">j</span>++) {</div>
+<div class="code-line">            <span class="keyword">if</span> (<span class="variable">arr</span>[<span class="variable">j</span>] > <span class="variable">arr</span>[<span class="variable">j</span> + <span class="number">1</span>]) {</div>
+<div class="code-line">                <span class="keyword">let</span> <span class="variable">temp</span> = <span class="variable">arr</span>[<span class="variable">j</span>];</div>
+<div class="code-line">                <span class="variable">arr</span>[<span class="variable">j</span>] = <span class="variable">arr</span>[<span class="variable">j</span> + <span class="number">1</span>];</div>
+<div class="code-line">                <span class="variable">arr</span>[<span class="variable">j</span> + <span class="number">1</span>] = <span class="variable">temp</span>;</div>
+<div class="code-line">            }</div>
+<div class="code-line">        }</div>
+<div class="code-line">    }</div>
+<div class="code-line">    <span class="keyword">return</span> <span class="variable">arr</span>;</div>
+<div class="code-line">}</div>`;
+
+                this.codeDisplay.innerHTML = algorithmCode;
             }
 
             highlightCodeLine(lineNumber) {
                 const lines = this.codeDisplay.querySelectorAll('.code-line');
-                lines.forEach(line => line.classList.remove('active', 'highlight'));
-                lines[lineNumber]?.classList.add('active');
+                lines.forEach((line, index) => {
+                    line.classList.remove('active', 'highlight');
+                    if (index === lineNumber) {
+                        line.classList.add('active');
+                    }
+                });
             }
         }
 

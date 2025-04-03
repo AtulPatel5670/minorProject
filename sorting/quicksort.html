@@ -140,7 +140,7 @@
                 this.isPaused = false;
                 this.currentStep = 0;
                 this.steps = [];
-                this.speed = 50;
+                this.speed = 1;
                 this.arraySize = 10;
 
                 this.initializeElements();
@@ -167,49 +167,41 @@
             }
 
             initializeCodeDisplay() {
-                const code = `function quickSort(arr, left, right) {
-    if (left < right) {
-        // Find partition index
-        const pivotIndex = partition(arr, left, right);
-        
-        // Recursively sort elements before and after partition
-        quickSort(arr, left, pivotIndex - 1);
-        quickSort(arr, pivotIndex + 1, right);
-    }
-}
-function partition(arr, left, right) {
-    // Choose rightmost element as pivot
-    const pivot = arr[right];
-    let i = left - 1;
-    // Compare each element with pivot
-    for (let j = left; j < right; j++) {
-        if (arr[j] <= pivot) {
-            i++;
-            // Swap elements
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-    }
-    // Place pivot in correct position
-    [arr[i + 1], arr[right]] = [arr[right], arr[i + 1]];
-    return i + 1;
-}`;
-                
-                this.codeDisplay.innerHTML = code.split('\n').map((line, index) => 
+                const algorithmCode = `<div class="code-line"><span class="keyword">function</span> <span class="function">quickSort</span>(<span class="variable">arr</span>, <span class="variable">low</span> = <span class="number">0</span>, <span class="variable">high</span> = <span class="variable">arr</span>.<span class="function">length</span> - <span class="number">1</span>) {</div>
+<div class="code-line">    <span class="keyword">if</span> (<span class="variable">low</span> < <span class="variable">high</span>) {</div>
+<div class="code-line">        <span class="keyword">const</span> <span class="variable">pivotIndex</span> = <span class="function">partition</span>(<span class="variable">arr</span>, <span class="variable">low</span>, <span class="variable">high</span>);</div>
+<div class="code-line">        <span class="function">quickSort</span>(<span class="variable">arr</span>, <span class="variable">low</span>, <span class="variable">pivotIndex</span> - <span class="number">1</span>);</div>
+<div class="code-line">        <span class="function">quickSort</span>(<span class="variable">arr</span>, <span class="variable">pivotIndex</span> + <span class="number">1</span>, <span class="variable">high</span>);</div>
+<div class="code-line">    }</div>
+<div class="code-line">    <span class="keyword">return</span> <span class="variable">arr</span>;</div>
+<div class="code-line">}</div>
+<div class="code-line"></div>
+<div class="code-line"><span class="keyword">function</span> <span class="function">partition</span>(<span class="variable">arr</span>, <span class="variable">low</span>, <span class="variable">high</span>) {</div>
+<div class="code-line">    <span class="keyword">const</span> <span class="variable">pivot</span> = <span class="variable">arr</span>[<span class="variable">high</span>];</div>
+<div class="code-line">    <span class="keyword">let</span> <span class="variable">i</span> = <span class="variable">low</span> - <span class="number">1</span>;</div>
+<div class="code-line">    <span class="keyword">for</span> (<span class="keyword">let</span> <span class="variable">j</span> = <span class="variable">low</span>; <span class="variable">j</span> < <span class="variable">high</span>; <span class="variable">j</span>++) {</div>
+<div class="code-line">        <span class="keyword">if</span> (<span class="variable">arr</span>[<span class="variable">j</span>] <= <span class="variable">pivot</span>) {</div>
+<div class="code-line">            <span class="variable">i</span>++;</div>
+<div class="code-line">            [<span class="variable">arr</span>[<span class="variable">i</span>], <span class="variable">arr</span>[<span class="variable">j</span>]] = [<span class="variable">arr</span>[<span class="variable">j</span>], <span class="variable">arr</span>[<span class="variable">i</span>]];</div>
+<div class="code-line">        }</div>
+<div class="code-line">    }</div>
+<div class="code-line">    [<span class="variable">arr</span>[<span class="variable">i</span> + <span class="number">1</span>], <span class="variable">arr</span>[<span class="variable">high</span>]] = [<span class="variable">arr</span>[<span class="variable">high</span>], <span class="variable">arr</span>[<span class="variable">i</span> + <span class="number">1</span>]];</div>
+<div class="code-line">    <span class="keyword">return</span> <span class="variable">i</span> + <span class="number">1</span>;</div>
+<div class="code-line">}</div>`;
+
+                this.codeDisplay.innerHTML = algorithmCode.split('\n').map((line, index) => 
                     `<div class="code-line" data-line="${index}">${line}</div>`
                 ).join('');
             }
 
             highlightCodeLine(lineNumber) {
                 const lines = this.codeDisplay.querySelectorAll('.code-line');
-                lines.forEach(line => {
+                lines.forEach((line, index) => {
                     line.classList.remove('active', 'highlight');
-                    line.style.backgroundColor = '';
+                    if (index === lineNumber) {
+                        line.classList.add('active');
+                    }
                 });
-                
-                if (lineNumber >= 0 && lineNumber < lines.length) {
-                    lines[lineNumber].classList.add('active');
-                    lines[lineNumber].style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
-                }
             }
 
             attachEventListeners() {
@@ -217,7 +209,10 @@ function partition(arr, left, right) {
                 this.startBtn.addEventListener('click', () => this.start());
                 this.pauseBtn.addEventListener('click', () => this.togglePause());
                 this.resetBtn.addEventListener('click', () => this.reset());
-                this.speedInput.addEventListener('input', (e) => this.speed = e.target.value);
+                this.speedInput.addEventListener('input', (e) => {
+                    this.speed = parseInt(e.target.value);
+                    document.getElementById('speedValue').textContent = this.speed;
+                });
                 this.arraySizeInput.addEventListener('change', (e) => {
                     this.arraySize = parseInt(e.target.value);
                     this.generateArray();
@@ -301,7 +296,7 @@ function partition(arr, left, right) {
 
             async quickSort(arr, left, right) {
                 if (left < right) {
-                    this.highlightCodeLine(1); // Highlight quickSort function
+                    this.highlightCodeLine(2); // Highlight quickSort function
                     this.addLogEntry(`Sorting subarray from index ${left} to ${right}`, 'comparison');
                     
                     // Highlight current partition range
@@ -311,7 +306,7 @@ function partition(arr, left, right) {
                     await this.delay();
                     
                     const pivotIndex = await this.partition(arr, left, right);
-                    this.highlightCodeLine(3); // Highlight recursive calls
+                    this.highlightCodeLine(5); // Highlight recursive calls
                     
                     await this.quickSort(arr, left, pivotIndex - 1);
                     await this.quickSort(arr, pivotIndex + 1, right);
@@ -322,7 +317,7 @@ function partition(arr, left, right) {
                 const pivot = arr[right];
                 let i = left - 1;
                 
-                this.highlightCodeLine(6); // Highlight partition function
+                this.highlightCodeLine(9); // Highlight partition function
                 this.addLogEntry(`Choosing pivot: ${pivot} at index ${right}`, 'comparison');
                 
                 // Highlight pivot
@@ -354,7 +349,7 @@ function partition(arr, left, right) {
                     
                     // Highlight current element being compared
                     this.highlightBars(j, right, 'comparing');
-                    this.highlightCodeLine(10); // Highlight comparison
+                    this.highlightCodeLine(19); // Highlight comparison
                     this.addLogEntry(`Comparing ${arr[j]} with pivot ${pivot}`, 'comparison');
                     await this.delay();
                     
@@ -366,7 +361,7 @@ function partition(arr, left, right) {
                         // Swap elements with animation
                         this.highlightBars(i, j, 'swapping');
                         [arr[i], arr[j]] = [arr[j], arr[i]];
-                        this.highlightCodeLine(12); // Highlight swap
+                        this.highlightCodeLine(24); // Highlight swap
                         this.addLogEntry(`Swapping ${arr[i]} and ${arr[j]}`, 'swap');
                         
                         this.updateBars();
@@ -379,7 +374,7 @@ function partition(arr, left, right) {
                 this.updateStats();
                 this.highlightBars(i + 1, right, 'swapping');
                 [arr[i + 1], arr[right]] = [arr[right], arr[i + 1]];
-                this.highlightCodeLine(17); // Highlight pivot placement
+                this.highlightCodeLine(31); // Highlight pivot placement
                 this.addLogEntry(`Placing pivot ${pivot} at index ${i + 1}`, 'swap');
                 
                 this.updateBars();
@@ -422,7 +417,7 @@ function partition(arr, left, right) {
 
             delay() {
                 return new Promise(resolve => 
-                    setTimeout(resolve, 1000 - this.speed * 10)
+                    setTimeout(resolve, 2000 - (this.speed * 300))
                 );
             }
 

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Search - Algorithm Visualizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../sorting/sorting-styles.css">
+</head>
+<body>
+    <nav>
+        <a href="../home.html" class="logo">VisuAlgo</a>
+        <div class="controls">
+            <div class="dropdown">
+                <button class="dropbtn">Linear Search</button>
+                <div class="dropdown-content">
+                    <a href="linearsearch.html" class="active">Linear Search</a>
+                    <a href="binarysearch.html">Binary Search</a>
+                    <a href="mergesort.html">Merge Sort</a>
+                    <a href="quicksort.html">Quick Sort</a>
+                    <a href="insertionsort.html">Insertion Sort</a>
+                </div>
+            </div>
+            <button id="startBtn" class="btn">Start Search</button>
+            <button id="pauseBtn" class="btn" disabled>Pause</button>
+            <button id="resetBtn" class="btn">Reset</button>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="controls-panel">
+            <div class="control-group">
+                <label for="speed">Speed:</label>
+                <input type="range" id="speed" min="1" max="5" value="1">
+                <span id="speedValue">1</span>
+            </div>
+            <div class="control-group">
+                <label for="target">Target Value:</label>
+                <input type="number" id="target" min="0" max="100" value="50">
+            </div>
+            <div class="control-group">
+                <label for="arraySize">Array Size:</label>
+                <input type="range" id="arraySize" min="5" max="20" value="10">
+                <span id="arraySizeValue">10</span>
+            </div>
+            <div class="control-group">
+                <label for="customArray">Custom Array:</label>
+                <input type="text" id="customArray" placeholder="Enter numbers separated by commas">
+                <button id="applyArray" class="btn">Apply</button>
+            </div>
+        </div>
+        <div class="visualizer">
+            <div class="array-container">
+                <h2>Array Visualization</h2>
+                <div class="array-bars" id="arrayBars"></div>
+            </div>
+            <div class="code-container">
+                <h2>Algorithm Code</h2>
+                <pre class="code-display" id="codeDisplay"></pre>
+            </div>
+            <div class="log-container" style="grid-column: 1 / -1;">
+                <h2>Searching Log</h2>
+                <div id="logEntries"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="algorithm-description">
+        <h3>About Linear Search</h3>
+        <div class="description-content">
+        <p>Linear Search is a simple searching algorithm that sequentially checks each element in the array until it finds the target value or reaches the end of the array.</p>
+        
+        <h3>Key Characteristics:</h3>
+        <ul>
+            <li>Time Complexity: O(n)</li>
+            <li>Space Complexity: O(1)</li>
+            <li>Works on both sorted and unsorted arrays</li>
+            <li>Simple to implement and understand</li>
+        </ul>
+
+        <h3>How it Works:</h3>
+        <ol>
+            <li>Start from the first element of the array</li>
+            <li>Compare the current element with the target value</li>
+            <li>If they match, return the current index</li>
+            <li>If they don't match, move to the next element</li>
+            <li>Repeat until the target is found or the end of array is reached</li>
+        </ol>
+        </div>
+    </div>
+    <script>
+        // Dropdown functionality
+        const dropdown = document.querySelector('.dropdown');
+        const dropbtn = document.querySelector('.dropbtn');
+        const dropdownContent = document.querySelector('.dropdown-content');
+
+        dropbtn.addEventListener('click', () => {
+            dropdownContent.classList.toggle('show');
+            dropbtn.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!dropdown.contains(event.target)) {
+                dropdownContent.classList.remove('show');
+                dropbtn.classList.remove('active');
+            }
+        });
+
+        // Linear Search Visualization
+        let array = [];
+        let currentIndex = -1;
+        let isSearching = false;
+        let isPaused = false;
+        let searchSpeed = 1000; // Initial speed in milliseconds
+
+        // DOM Elements
+        const arrayBars = document.getElementById('arrayBars');
+        const logEntries = document.getElementById('logEntries');
+        const speedInput = document.getElementById('speed');
+        const speedValue = document.getElementById('speedValue');
+        const targetInput = document.getElementById('target');
+        const arraySizeInput = document.getElementById('arraySize');
+        const arraySizeValue = document.getElementById('arraySizeValue');
+        const customArrayInput = document.getElementById('customArray');
+        const applyArrayBtn = document.getElementById('applyArray');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const codeDisplay = document.getElementById('codeDisplay');
+
+        // Algorithm code for display
+        const algorithmCode = `<div class="code-line"><span class="keyword">function</span> <span class="function">linearSearch</span>(<span class="variable">arr</span>, <span class="variable">target</span>) {</div>
+<div class="code-line">    <span class="keyword">for</span> (<span class="keyword">let</span> <span class="variable">i</span> = <span class="number">0</span>; <span class="variable">i</span> < <span class="variable">arr</span>.<span class="function">length</span>; <span class="variable">i</span>++) {</div>
+<div class="code-line">        <span class="keyword">if</span> (<span class="variable">arr</span>[<span class="variable">i</span>] === <span class="variable">target</span>) {</div>
+<div class="code-line">            <span class="keyword">return</span> <span class="variable">i</span>;</div>
+<div class="code-line">        }</div>
+<div class="code-line">    }</div>
+<div class="code-line">    <span class="keyword">return</span> -<span class="number">1</span>;</div>
+<div class="code-line">}</div>`;
+
+        // Event Listeners
+        speedInput.addEventListener('input', () => {
+            const speed = parseInt(speedInput.value);
+            speedValue.textContent = speed;
+            searchSpeed = 2000 - (speed * 300); // Convert speed (1-5) to delay (1700-500ms)
+        });
+
+        arraySizeInput.addEventListener('input', () => {
+            arraySizeValue.textContent = arraySizeInput.value;
+            if (!isSearching) {
+                initializeArray();
+            }
+        });
+
+        applyArrayBtn.addEventListener('click', () => {
+            const customArray = customArrayInput.value
+                .split(',')
+                .map(num => parseInt(num.trim()))
+                .filter(num => !isNaN(num));
+            
+            if (customArray.length > 0) {
+                array = customArray;
+                updateVisualization();
+                log(`Custom array applied: [${array.join(', ')}]`);
+            } else {
+                log('Please enter valid numbers separated by commas');
+            }
+        });
+
+        startBtn.addEventListener('click', startSearch);
+        pauseBtn.addEventListener('click', () => {
+            if (isSearching) {
+                isPaused = !isPaused;
+                pauseBtn.textContent = isPaused ? 'Resume' : 'Pause';
+                log(isPaused ? 'Search paused' : 'Search resumed');
+            }
+        });
+        resetBtn.addEventListener('click', resetVisualization);
+
+        // Initialize visualization
+        function initializeArray() {
+            const size = parseInt(arraySizeInput.value);
+            array = Array.from({ length: size }, () => Math.floor(Math.random() * 100));
+            updateVisualization();
+            log(`Initialized array with ${size} random numbers`);
+        }
+
+        function updateVisualization() {
+            arrayBars.innerHTML = '';
+            array.forEach((value, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = `${value * 3}px`; // Scale the height for better visualization
+                
+                const label = document.createElement('div');
+                label.className = 'bar-label';
+                label.textContent = value;
+                bar.appendChild(label);
+                
+                if (index === currentIndex) {
+                    bar.classList.add('comparing');
+                }
+                
+                arrayBars.appendChild(bar);
+            });
+        }
+
+        function log(message) {
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            
+            // Add appropriate classes based on message type
+            if (message.includes('Checking')) {
+                logEntry.classList.add('comparison');
+            } else if (message.includes('Found')) {
+                logEntry.classList.add('sorted');
+            } else if (message.includes('not found')) {
+                logEntry.classList.add('swap');
+            }
+            
+            const timestamp = document.createElement('span');
+            timestamp.className = 'log-timestamp';
+            timestamp.textContent = new Date().toLocaleTimeString();
+            
+            const messageSpan = document.createElement('span');
+            messageSpan.textContent = message;
+            
+            logEntry.appendChild(timestamp);
+            logEntry.appendChild(messageSpan);
+            
+            // Insert at the beginning instead of the end
+            if (logEntries.firstChild) {
+                logEntries.insertBefore(logEntry, logEntries.firstChild);
+            } else {
+                logEntries.appendChild(logEntry);
+            }
+        }
+
+        // Function to highlight code lines
+        function highlightCodeLine(lineNumber) {
+            const lines = codeDisplay.querySelectorAll('.code-line');
+            lines.forEach((line, index) => {
+                line.classList.remove('active', 'highlight');
+                if (index === lineNumber) {
+                    line.classList.add('active');
+                }
+            });
+        }
+
+        async function linearSearch(target) {
+            // Highlight function declaration
+            highlightCodeLine(0);
+            await new Promise(resolve => setTimeout(resolve, searchSpeed));
+
+            for (let i = 0; i < array.length; i++) {
+                currentIndex = i;
+                updateVisualization();
+                log(`Checking element at index ${i}: ${array[i]}`);
+                
+                // Highlight the for loop line
+                highlightCodeLine(1);
+                await new Promise(resolve => setTimeout(resolve, searchSpeed));
+                
+                // Highlight the if condition line
+                highlightCodeLine(2);
+                if (array[i] === target) {
+                    // Highlight the return line
+                    highlightCodeLine(3);
+                    log(`Found target ${target} at index ${i}!`);
+                    return i;
+                }
+                
+                // Check for pause
+                while (isPaused) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+            }
+            
+            // Highlight the final return line
+            highlightCodeLine(6);
+            log(`Target ${target} not found in array`);
+            return -1;
+        }
+
+        async function startSearch() {
+            if (isSearching) return;
+            
+            const target = parseInt(targetInput.value);
+            if (isNaN(target)) {
+                log('Please enter a valid target value');
+                return;
+            }
+            
+            isSearching = true;
+            isPaused = false;
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+            resetBtn.disabled = true;
+            
+            log(`Starting linear search for target: ${target}`);
+            const result = await linearSearch(target);
+            
+            if (result !== -1) {
+                const bars = arrayBars.children;
+                bars[result].classList.add('sorted');
+            } else {
+                const bars = arrayBars.children;
+                Array.from(bars).forEach(bar => bar.classList.add('not-found'));
+            }
+            
+            isSearching = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            resetBtn.disabled = false;
+        }
+
+        function resetVisualization() {
+            if (isSearching) return;
+            
+            currentIndex = -1;
+            isPaused = false;
+            pauseBtn.textContent = 'Pause';
+            initializeArray();
+            logEntries.innerHTML = '';
+            log('Visualization reset');
+            
+            // Remove all code highlighting
+            const lines = codeDisplay.querySelectorAll('.code-line');
+            lines.forEach(line => {
+                line.classList.remove('active', 'highlight');
+            });
+        }
+
+        // Initialize the visualization and display code
+        initializeArray();
+        codeDisplay.innerHTML = algorithmCode;
+    </script>
+</body>
+</html> 

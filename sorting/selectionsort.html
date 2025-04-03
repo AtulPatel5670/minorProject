@@ -139,7 +139,7 @@
                 this.isPaused = false;
                 this.currentStep = 0;
                 this.steps = [];
-                this.speed = 50;
+                this.speed = 1;
                 this.arraySize = 10;
 
                 this.initializeElements();
@@ -166,38 +166,34 @@
             }
 
             initializeCodeDisplay() {
-                const code = `function selectionSort(arr) {
-    const n = arr.length;
-    for (let i = 0; i < n - 1; i++) {
-        let minIdx = i;
-        // Find the minimum element in unsorted array
-        for (let j = i + 1; j < n; j++) {
-            if (arr[j] < arr[minIdx]) {
-                minIdx = j;
-            }
-        }
-        // Swap the found minimum element with the first element
-        [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]];
-    }
-    return arr;
-}`;
-                
-                this.codeDisplay.innerHTML = code.split('\n').map((line, index) => 
+                const algorithmCode = `<div class="code-line"><span class="keyword">function</span> <span class="function">selectionSort</span>(<span class="variable">arr</span>) {</div>
+<div class="code-line">    <span class="keyword">for</span> (<span class="keyword">let</span> <span class="variable">i</span> = <span class="number">0</span>; <span class="variable">i</span> < <span class="variable">arr</span>.<span class="function">length</span> - <span class="number">1</span>; <span class="variable">i</span>++) {</div>
+<div class="code-line">        <span class="keyword">let</span> <span class="variable">minIdx</span> = <span class="variable">i</span>;</div>
+<div class="code-line">        <span class="keyword">for</span> (<span class="keyword">let</span> <span class="variable">j</span> = <span class="variable">i</span> + <span class="number">1</span>; <span class="variable">j</span> < <span class="variable">arr</span>.<span class="function">length</span>; <span class="variable">j</span>++) {</div>
+<div class="code-line">            <span class="keyword">if</span> (<span class="variable">arr</span>[<span class="variable">j</span>] < <span class="variable">arr</span>[<span class="variable">minIdx</span>]) {</div>
+<div class="code-line">                <span class="variable">minIdx</span> = <span class="variable">j</span>;</div>
+<div class="code-line">            }</div>
+<div class="code-line">        }</div>
+<div class="code-line">        <span class="keyword">if</span> (<span class="variable">minIdx</span> !== <span class="variable">i</span>) {</div>
+<div class="code-line">            [<span class="variable">arr</span>[<span class="variable">i</span>], <span class="variable">arr</span>[<span class="variable">minIdx</span>]] = [<span class="variable">arr</span>[<span class="variable">minIdx</span>], <span class="variable">arr</span>[<span class="variable">i</span>]];</div>
+<div class="code-line">        }</div>
+<div class="code-line">    }</div>
+<div class="code-line">    <span class="keyword">return</span> <span class="variable">arr</span>;</div>
+<div class="code-line">}</div>`;
+
+                this.codeDisplay.innerHTML = algorithmCode.split('\n').map((line, index) => 
                     `<div class="code-line" data-line="${index}">${line}</div>`
                 ).join('');
             }
 
             highlightCodeLine(lineNumber) {
                 const lines = this.codeDisplay.querySelectorAll('.code-line');
-                lines.forEach(line => {
+                lines.forEach((line, index) => {
                     line.classList.remove('active', 'highlight');
-                    line.style.backgroundColor = '';
+                    if (index === lineNumber) {
+                        line.classList.add('active');
+                    }
                 });
-                
-                if (lineNumber >= 0 && lineNumber < lines.length) {
-                    lines[lineNumber].classList.add('active');
-                    lines[lineNumber].style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
-                }
             }
 
             attachEventListeners() {
@@ -205,7 +201,10 @@
                 this.startBtn.addEventListener('click', () => this.start());
                 this.pauseBtn.addEventListener('click', () => this.togglePause());
                 this.resetBtn.addEventListener('click', () => this.reset());
-                this.speedInput.addEventListener('input', (e) => this.speed = e.target.value);
+                this.speedInput.addEventListener('input', (e) => {
+                    this.speed = parseInt(e.target.value);
+                    document.getElementById('speedValue').textContent = this.speed;
+                });
                 this.arraySizeInput.addEventListener('change', (e) => {
                     this.arraySize = parseInt(e.target.value);
                     this.generateArray();
@@ -403,7 +402,7 @@
 
             delay() {
                 return new Promise(resolve => 
-                    setTimeout(resolve, 1000 - this.speed * 10)
+                    setTimeout(resolve, 2000 - (this.speed * 300))
                 );
             }
 

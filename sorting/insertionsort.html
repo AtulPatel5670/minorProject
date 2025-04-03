@@ -140,7 +140,7 @@
                 this.isPaused = false;
                 this.currentStep = 0;
                 this.steps = [];
-                this.speed = 50;
+                this.speed = 1;
                 this.arraySize = 10;
 
                 this.initializeElements();
@@ -167,37 +167,30 @@
             }
 
             initializeCodeDisplay() {
-                const code = `function insertionSort(arr) {
-    for (let i = 1; i < arr.length; i++) {
-        let key = arr[i];
-        let j = i - 1;
-        // Move elements that are greater than key
-        // to one position ahead of their current position
-        while (j >= 0 && arr[j] > key) {
-            arr[j + 1] = arr[j];
-            j--;
-        }
-        arr[j + 1] = key;
-    }
-    return arr;
-}`;
-                
-                this.codeDisplay.innerHTML = code.split('\n').map((line, index) => 
-                    `<div class="code-line" data-line="${index}">${line}</div>`
-                ).join('');
+                const algorithmCode = `<div class="code-line"><span class="keyword">function</span> <span class="function">insertionSort</span>(<span class="variable">arr</span>) {</div>
+<div class="code-line">    <span class="keyword">for</span> (<span class="keyword">let</span> <span class="variable">i</span> = <span class="number">1</span>; <span class="variable">i</span> < <span class="variable">arr</span>.<span class="function">length</span>; <span class="variable">i</span>++) {</div>
+<div class="code-line">        <span class="keyword">let</span> <span class="variable">key</span> = <span class="variable">arr</span>[<span class="variable">i</span>];</div>
+<div class="code-line">        <span class="keyword">let</span> <span class="variable">j</span> = <span class="variable">i</span> - <span class="number">1</span>;</div>
+<div class="code-line">        <span class="keyword">while</span> (<span class="variable">j</span> >= <span class="number">0</span> && <span class="variable">arr</span>[<span class="variable">j</span>] > <span class="variable">key</span>) {</div>
+<div class="code-line">            <span class="variable">arr</span>[<span class="variable">j</span> + <span class="number">1</span>] = <span class="variable">arr</span>[<span class="variable">j</span>];</div>
+<div class="code-line">            <span class="variable">j</span>--;</div>
+<div class="code-line">        }</div>
+<div class="code-line">        <span class="variable">arr</span>[<span class="variable">j</span> + <span class="number">1</span>] = <span class="variable">key</span>;</div>
+<div class="code-line">    }</div>
+<div class="code-line">    <span class="keyword">return</span> <span class="variable">arr</span>;</div>
+<div class="code-line">}</div>`;
+
+                this.codeDisplay.innerHTML = algorithmCode;
             }
 
             highlightCodeLine(lineNumber) {
                 const lines = this.codeDisplay.querySelectorAll('.code-line');
-                lines.forEach(line => {
+                lines.forEach((line, index) => {
                     line.classList.remove('active', 'highlight');
-                    line.style.backgroundColor = '';
+                    if (index === lineNumber) {
+                        line.classList.add('active');
+                    }
                 });
-                
-                if (lineNumber >= 0 && lineNumber < lines.length) {
-                    lines[lineNumber].classList.add('active');
-                    lines[lineNumber].style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
-                }
             }
 
             attachEventListeners() {
@@ -205,7 +198,10 @@
                 this.startBtn.addEventListener('click', () => this.start());
                 this.pauseBtn.addEventListener('click', () => this.togglePause());
                 this.resetBtn.addEventListener('click', () => this.reset());
-                this.speedInput.addEventListener('input', (e) => this.speed = e.target.value);
+                this.speedInput.addEventListener('input', (e) => {
+                    this.speed = parseInt(e.target.value);
+                    document.getElementById('speedValue').textContent = this.speed;
+                });
                 this.arraySizeInput.addEventListener('change', (e) => {
                     this.arraySize = parseInt(e.target.value);
                     this.generateArray();
@@ -279,7 +275,7 @@
 
             async insertionSort() {
                 for (let i = 1; i < this.array.length; i++) {
-                    this.highlightCodeLine(2); // Highlight outer loop
+                    this.highlightCodeLine(0); // Highlight function declaration
                     let key = this.array[i];
                     let j = i - 1;
                     
@@ -303,19 +299,19 @@
                         this.comparisons++;
                         this.updateStats();
                         this.highlightBars(i, j);
-                        this.highlightCodeLine(6); // Highlight comparison in while loop
+                        this.highlightCodeLine(3); // Highlight comparison in while loop
                         this.addLogEntry(`Comparing ${this.array[j]} with key ${key}`, 'comparison');
 
                         if (this.array[j] > key) {
                             this.array[j + 1] = this.array[j];
                             this.swaps++;
                             this.updateStats();
-                            this.highlightCodeLine(7); // Highlight shift operation
+                            this.highlightCodeLine(4); // Highlight shift operation
                             this.addLogEntry(`Shifting ${this.array[j]} to position ${j + 1}`, 'swap');
                             this.updateBars();
                             this.highlightBars(i, j);
                         } else {
-                            this.highlightCodeLine(6); // Highlight comparison when breaking
+                            this.highlightCodeLine(3); // Highlight comparison when breaking
                             break;
                         }
 
@@ -393,7 +389,7 @@
 
             delay() {
                 return new Promise(resolve => 
-                    setTimeout(resolve, 1000 - this.speed * 10)
+                    setTimeout(resolve, 2000 - (this.speed * 300))
                 );
             }
 
