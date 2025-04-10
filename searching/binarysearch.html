@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linear Search - Algorithm Visualizer</title>
+    <title>Binary Search - Algorithm Visualizer</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../sorting/sorting-styles.css">
@@ -13,10 +13,10 @@
         <a href="../home.html" class="logo">VisuAlgo</a>
         <div class="controls">
             <div class="dropdown">
-                <button class="dropbtn">Linear Search</button>
+                <button class="dropbtn">Binary Search</button>
                 <div class="dropdown-content">
-                    <a href="linearsearch.html" class="active">Linear Search</a>
-                    <a href="binarysearch.html">Binary Search</a>
+                    <a href="linearsearch.html">Linear Search</a>
+                    <a href="binarysearch.html" class="active">Binary Search</a>
                     <a href="unsortedbinarysearch.html">Unsorted B. Search</a>
                     <a href="quicksort.html">Quick Sort</a>
                     <a href="insertionsort.html">Insertion Sort</a>
@@ -28,66 +28,66 @@
         </div>
     </nav>
    
-        <div class="main-container">
-            <div class="controls-panel">
-                <div class="control-group">
-                    <label for="speed">Speed:</label>
-                    <input type="range" id="speed" min="1" max="5" value="1">
-                    <span id="speedValue">1</span>
-                </div>
-                <div class="control-group">
-                    <label for="target">Target Value:</label>
-                    <input type="number" id="target" min="0" max="100" value="50">
-                </div>
-                <div class="control-group">
-                    <label for="arraySize">Array Size:</label>
-                    <input type="range" id="arraySize" min="5" max="20" value="10">
-                    <span id="arraySizeValue">10</span>
-                </div>
-                <div class="control-group">
-                    <label for="customArray">Custom Array:</label>
-                    <input type="text" id="customArray" placeholder="Enter numbers separated by commas">
+    <div class="main-container">
+        <div class="controls-panel">
+            <div class="control-group">
+                <label for="speed">Speed:</label>
+                <input type="range" id="speed" min="1" max="5" value="1">
+                <span id="speedValue">1</span>
+            </div>
+            <div class="control-group">
+                <label for="target">Target Value:</label>
+                <input type="number" id="target" min="0" max="100" value="50">
+            </div>
+            <div class="control-group">
+                <label for="arraySize">Array Size:</label>
+                <input type="range" id="arraySize" min="5" max="20" value="10">
+                <span id="arraySizeValue">10</span>
+            </div>
+            <div class="control-group">
+                <label for="customArray">Custom Array:</label>
+                <input type="text" id="customArray" placeholder="Enter numbers separated by commas">
                 <button id="applyArray" class="btn">Apply</button>
             </div>
+        </div>
+        <div class="visualizer">
+            <div class="array-container">
+                <h2>Array Visualization</h2>
+                <div class="array-bars" id="arrayBars"></div>
             </div>
-            <div class="visualizer">
-                <div class="array-container">
-                    <h2>Array Visualization</h2>
-                    <div class="array-bars" id="arrayBars"></div>
-                </div>
-                <div class="code-container">
-                    <h2>Algorithm Code</h2>
-                    <pre class="code-display" id="codeDisplay"></pre>
-                </div>
+            <div class="code-container">
+                <h2>Algorithm Code</h2>
+                <pre class="code-display" id="codeDisplay"></pre>
+            </div>
             <div class="log-container" style="grid-column: 1 / -1;">
                 <h2>Searching Log</h2>
-                    <div id="logEntries"></div>
-                </div>
+                <div id="logEntries"></div>
             </div>
         </div>
+    </div>
 
-            <div class="algorithm-description">
-        <h3>About Linear Search</h3>
+    <div class="algorithm-description">
+        <h3>About Binary Search</h3>
         <div class="description-content">
-                <p>Linear Search is a simple searching algorithm that sequentially checks each element in the array until it finds the target value or reaches the end of the array.</p>
-                
-                <h3>Key Characteristics:</h3>
-                <ul>
-                    <li>Time Complexity: O(n)</li>
-                    <li>Space Complexity: O(1)</li>
-                    <li>Works on both sorted and unsorted arrays</li>
-                    <li>Simple to implement and understand</li>
-                </ul>
+            <p>Binary Search is an efficient algorithm for finding an item from a sorted list of items. It works by repeatedly dividing the search interval in half.</p>
+            
+            <h3>Key Characteristics:</h3>
+            <ul>
+                <li>Time Complexity: O(log n)</li>
+                <li>Space Complexity: O(1)</li>
+                <li>Works only on sorted arrays</li>
+                <li>More efficient than linear search for large datasets</li>
+            </ul>
 
-                <h3>How it Works:</h3>
-                <ol>
-                    <li>Start from the first element of the array</li>
-                    <li>Compare the current element with the target value</li>
-                    <li>If they match, return the current index</li>
-                    <li>If they don't match, move to the next element</li>
-                    <li>Repeat until the target is found or the end of array is reached</li>
-                </ol>
-            </div>
+            <h3>How it Works:</h3>
+            <ol>
+                <li>Start with the middle element of the array</li>
+                <li>If the middle element is equal to the target value, return the index</li>
+                <li>If the target value is less than the middle element, repeat the search on the left half</li>
+                <li>If the target value is greater than the middle element, repeat the search on the right half</li>
+                <li>Repeat until the target is found or the interval is empty</li>
+            </ol>
+        </div>
     </div>
     <script>
         // Dropdown functionality
@@ -108,7 +108,7 @@
             }
         });
 
-        // Linear Search Visualization
+        // Binary Search Visualization
         let array = [];
         let currentIndex = -1;
         let isSearching = false;
@@ -131,10 +131,16 @@
         const codeDisplay = document.getElementById('codeDisplay');
 
         // Algorithm code for display
-        const algorithmCode = `<div class="code-line"><span class="keyword">function</span> <span class="function">linearSearch</span>(<span class="variable">arr</span>, <span class="variable">target</span>) {</div>
-<div class="code-line">    <span class="keyword">for</span> (<span class="keyword">let</span> <span class="variable">i</span> = <span class="number">0</span>; <span class="variable">i</span> < <span class="variable">arr</span>.<span class="function">length</span>; <span class="variable">i</span>++) {</div>
-<div class="code-line">        <span class="keyword">if</span> (<span class="variable">arr</span>[<span class="variable">i</span>] === <span class="variable">target</span>) {</div>
-<div class="code-line">            <span class="keyword">return</span> <span class="variable">i</span>;</div>
+        const algorithmCode = `<div class="code-line"><span class="keyword">function</span> <span class="function">binarySearch</span>(<span class="variable">arr</span>, <span class="variable">target</span>) {</div>
+<div class="code-line">    <span class="keyword">let</span> <span class="variable">left</span> = <span class="number">0</span>, <span class="variable">right</span> = <span class="variable">arr</span>.<span class="function">length</span> - <span class="number">1</span>;</div>
+<div class="code-line">    <span class="keyword">while</span> (<span class="variable">left</span> <= <span class="variable">right</span>) {</div>
+<div class="code-line">        <span class="keyword">let</span> <span class="variable">mid</span> = <span class="variable">Math</span>.<span class="function">floor</span>((<span class="variable">left</span> + <span class="variable">right</span>) / <span class="number">2</span>);</div>
+<div class="code-line">        <span class="keyword">if</span> (<span class="variable">arr</span>[<span class="variable">mid</span>] === <span class="variable">target</span>) {</div>
+<div class="code-line">            <span class="keyword">return</span> <span class="variable">mid</span>;</div>
+<div class="code-line">        } <span class="keyword">else if</span> (<span class="variable">arr</span>[<span class="variable">mid</span>] < <span class="variable">target</span>) {</div>
+<div class="code-line">            <span class="variable">left</span> = <span class="variable">mid</span> + <span class="number">1</span>;</div>
+<div class="code-line">        } <span class="keyword">else</span> {</div>
+<div class="code-line">            <span class="variable">right</span> = <span class="variable">mid</span> - <span class="number">1</span>;</div>
 <div class="code-line">        }</div>
 <div class="code-line">    }</div>
 <div class="code-line">    <span class="keyword">return</span> -<span class="number">1</span>;</div>
@@ -161,7 +167,7 @@
                 .filter(num => !isNaN(num));
             
             if (customArray.length > 0) {
-                array = customArray;
+                array = customArray.sort((a, b) => a - b);
                 updateVisualization();
                 log(`Custom array applied: [${array.join(', ')}]`);
             } else {
@@ -182,7 +188,7 @@
         // Initialize visualization
         function initializeArray() {
             const size = parseInt(arraySizeInput.value);
-            array = Array.from({ length: size }, () => Math.floor(Math.random() * 100));
+            array = Array.from({ length: size }, () => Math.floor(Math.random() * 100)).sort((a, b) => a - b);
             updateVisualization();
             log(`Initialized array with ${size} random numbers`);
         }
@@ -249,27 +255,32 @@
             });
         }
 
-        async function linearSearch(target) {
+        async function binarySearch(target) {
             // Highlight function declaration
             highlightCodeLine(0);
             await new Promise(resolve => setTimeout(resolve, searchSpeed));
 
-            for (let i = 0; i < array.length; i++) {
-                currentIndex = i;
+            let left = 0;
+            let right = array.length - 1;
+
+            while (left <= right) {
+                const mid = Math.floor((left + right) / 2);
+                currentIndex = mid;
                 updateVisualization();
-                log(`Checking element at index ${i}: ${array[i]}`);
+                log(`Checking element at index ${mid}: ${array[mid]}`);
                 
-                // Highlight the for loop line
                 highlightCodeLine(1);
                 await new Promise(resolve => setTimeout(resolve, searchSpeed));
                 
-                // Highlight the if condition line
                 highlightCodeLine(2);
-                if (array[i] === target) {
-                    // Highlight the return line
+                if (array[mid] === target) {
                     highlightCodeLine(3);
-                    log(`Found target ${target} at index ${i}!`);
-                    return i;
+                    log(`Found target ${target} at index ${mid}!`);
+                    return mid;
+                } else if (array[mid] < target) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
                 }
                 
                 // Check for pause
@@ -278,7 +289,6 @@
                 }
             }
             
-            // Highlight the final return line
             highlightCodeLine(6);
             log(`Target ${target} not found in array`);
             return -1;
@@ -299,8 +309,8 @@
             pauseBtn.disabled = false;
             resetBtn.disabled = true;
             
-            log(`Starting linear search for target: ${target}`);
-            const result = await linearSearch(target);
+            log(`Starting binary search for target: ${target}`);
+            const result = await binarySearch(target);
             
             if (result !== -1) {
                 const bars = arrayBars.children;
@@ -338,4 +348,4 @@
         codeDisplay.innerHTML = algorithmCode;
     </script>
 </body>
-</html> 
+</html>
