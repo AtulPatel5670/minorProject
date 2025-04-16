@@ -17,9 +17,7 @@
                 <div class="dropdown-content">
                     <a href="linearsearch.html">Linear Search</a>
                     <a href="binarysearch.html">Binary Search</a>
-                    <a href="unsortedbinarysearch.html">Unsorted B. Search</a>
-                    <a href="quicksort.html">Quick Sort</a>
-                    <a href="insertionsort.html">Insertion Sort</a>
+                    <a href="unsortedbinarysearch.html" class="active">Unsorted B. Search</a>
                 </div>
             </div>
             <button id="startBtn" class="btn">Start Search</button>
@@ -211,19 +209,38 @@
                 arrayBars.appendChild(bar);
             });
         }
-
         function log(message) {
             const logEntry = document.createElement('div');
             logEntry.className = 'log-entry';
+            
+            // Add appropriate classes based on message type
+            if (message.includes('Checking')) {
+                logEntry.classList.add('comparison');
+            } else if (message.includes('Found')) {
+                logEntry.classList.add('sorted');
+            } else if (message.includes('not found')) {
+                logEntry.classList.add('swap');
+            }
+            
             const timestamp = document.createElement('span');
             timestamp.className = 'log-timestamp';
             timestamp.textContent = new Date().toLocaleTimeString();
+            
             const messageSpan = document.createElement('span');
             messageSpan.textContent = message;
+            
             logEntry.appendChild(timestamp);
             logEntry.appendChild(messageSpan);
-            logEntries.insertBefore(logEntry, logEntries.firstChild);
+            
+            // Insert at the beginning instead of the end
+            if (logEntries.firstChild) {
+                logEntries.insertBefore(logEntry, logEntries.firstChild);
+            } else {
+                logEntries.appendChild(logEntry);
+            }
         }
+       
+
         // Highlighting code lines
         function highlightCodeLine(lineNumber) {
             const lines = codeDisplay.querySelectorAll('.code-line');

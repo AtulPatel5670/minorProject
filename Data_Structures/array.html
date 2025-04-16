@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Array Visualizer - Algorithm Visualizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../sorting/sorting-styles.css">
+    <style>
+        /* Highlighted Bar */
+        .bar.highlight-search {
+            background-color: #ffeb3b; /* Yellow color for search highlight */
+            transition: background-color 0.3s ease;
+        }
+
+        /* Styling for the select dropdown */
+        select {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        select:focus {
+            border-color: #007acc;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            outline: none;
+        }
+
+    
+        select option {
+            font-size: 16px;
+            color: var(--primary-color);
+            background: rgba(102, 126, 234, 0.1);
+            padding: 10px;
+        }
+
+        /* Optional: Add hover effect for dropdown options */
+        select:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="../home.html" class="logo">VisuAlgo</a>
+        <div class="controls">
+            <div class="dropdown">
+                <button class="dropbtn">Array Operations</button>
+                <div class="dropdown-content">
+                    <a href="array.html" class="active">Array Visualizer</a>
+                    <a href="../searching/linearsearch.html">Linear Search</a>
+                    <a href="../searching/binarysearch.html">Binary Search</a>
+                </div>
+            </div>
+            <button id="generateArray" class="btn">Generate Random Array</button>
+            <button id="performOperation" class="btn">Perform Operation</button>
+            <button id="pauseBtn" class="btn" disabled>Pause</button>
+            <button id="resetBtn" class="btn">Reset</button>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="controls-panel">
+            <div class="control-group">
+                <label for="arraySize">Array Size:</label>
+                <input type="range" id="arraySize" min="5" max="25" value="10">
+                <span id="arraySizeValue">10</span>
+            </div>
+            <div class="control-group">
+                <label for="customArray">Custom Array:</label>
+                <input type="text" id="customArray" placeholder="Enter numbers separated by commas">
+                <button class="btn" id="applyArray" >Apply</button>
+            </div>
+        </div>
+        
+        <div class="controls-panel">
+            <div class="control-group">
+                <label for="operationValue">Value:</label>
+                <input type="number" id="operationValue" placeholder="Enter value">
+            </div>
+            <div class="control-group">
+                <label for="operationIndex">Index:</label>
+                <input type="number" id="operationIndex" placeholder="Enter index">
+            </div>
+            <div class="control-group">
+                <label for="operationType">Operation:</label>
+                <select id="operationType">
+                    <option value="insert">Insert</option>
+                    <option value="delete">Delete</option>
+                    <option value="search">Search</option>
+                    <option value="update">Update</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="visualizer">
+            <div class="array-container">
+                <h2>Array Visualization</h2>
+                <div class="array-bars" id="arrayBars"></div>
+            </div>
+            
+            <div class="log-container">
+                <h2>Logs</h2>
+                <div id="logEntries" class="log-entries"></div>
+            </div>
+        </div>
+
+        <div class="algorithm-description">
+            <h3>About Array Visualizer</h3>
+            <div class="description-content">
+            <p>
+                Arrays are one of the most fundamental data structures in computer science. They are used to store a collection of elements, 
+                typically of the same type, in a contiguous block of memory. Arrays allow for efficient access to elements using an index.
+            </p>
+            <h3>How It Works:</h3>
+            <ol>
+                <li>Generate a random array of customizable size.</li>
+                <li>Input a custom array to visualize specific data.</li>
+                <li>Interact with the array through various operations.</li>
+            </ol>
+            <h3>Applications:</h3>
+            <p>
+                Arrays are widely used in algorithms, data processing, and as building blocks for more complex data structures like stacks, queues, and matrices.
+            </p>
+            <h3>Complexity:</h3>
+            <ul>
+                <li><strong>Access:</strong> O(1)</li>
+                <li><strong>Search:</strong> O(n)</li>
+                <li><strong>Insertion/Deletion:</strong> O(n) (in the worst case for shifting elements)</li>
+            </ul>
+            <p>
+                <strong>Space Complexity:</strong> O(n), where n is the number of elements in the array.
+            </p>
+        </div>
+    </div>
+
+    </div>
+
+    <script>
+        const arrayBars = document.getElementById('arrayBars');
+        const arraySizeInput = document.getElementById('arraySize');
+        const arraySizeValue = document.getElementById('arraySizeValue');
+        const customArrayInput = document.getElementById('customArray');
+        const applyArrayBtn = document.getElementById('applyArray');
+        const generateArrayBtn = document.getElementById('generateArray');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const codeDisplay = document.getElementById('codeDisplay');
+
+        const operationValueInput = document.getElementById('operationValue');
+        const operationIndexInput = document.getElementById('operationIndex');
+        
+        let array = [];
+        let isPaused = false;
+        let isRunning = false;
+
+        // Function to generate a random array
+        function generateRandomArray(size) {
+            return Array.from({ length: size }, () => Math.floor(Math.random() * 100) + 1);
+        }
+
+        // Function to update the visualization
+        function updateVisualization() {
+            arrayBars.innerHTML = '';
+            array.forEach(value => {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = `${value * 3}px`; // Scale the height for better visualization
+                
+                const label = document.createElement('div');
+                label.className = 'bar-label';
+                label.textContent = value;
+                bar.appendChild(label);
+
+                arrayBars.appendChild(bar);
+            });
+        }
+
+        // Event listener for array size input
+        arraySizeInput.addEventListener('input', () => {
+            const size = parseInt(arraySizeInput.value);
+            arraySizeValue.textContent = size;
+            array = generateRandomArray(size);
+            updateVisualization();
+        });
+
+        // Event listener for applying a custom array
+        applyArrayBtn.addEventListener('click', () => {
+            const customArray = customArrayInput.value
+                .split(',')
+                .map(num => parseInt(num.trim()))
+                .filter(num => !isNaN(num));
+            
+            if (customArray.length > 0) {
+                array = customArray;
+                updateVisualization();
+            } else {
+                alert('Please enter valid numbers separated by commas.');
+            }
+        });
+
+        // Event listener for generating a random array
+        generateArrayBtn.addEventListener('click', () => {
+            const size = parseInt(arraySizeInput.value);
+            array = generateRandomArray(size);
+            updateVisualization();
+        });
+
+        // Reset button functionality
+        resetBtn.addEventListener('click', () => {
+            isRunning = false;
+            isPaused = false;
+            pauseBtn.disabled = true;
+            resetBtn.disabled = false;
+            array = generateRandomArray(parseInt(arraySizeInput.value));
+            updateVisualization();
+            log('Visualization reset');
+        });
+
+        // Perform Operation Button
+        const performOperationBtn = document.getElementById('performOperation');
+        const operationTypeSelect = document.getElementById('operationType');
+
+        // Perform the selected operation
+        performOperationBtn.addEventListener('click', () => {
+            const operationType = operationTypeSelect.value;
+            const value = parseInt(operationValueInput.value);
+            const index = parseInt(operationIndexInput.value);
+
+            switch (operationType) {
+                case 'insert':
+                    if (isNaN(value) || isNaN(index) || index < 0 || index > array.length) {
+                        alert('Please enter a valid value and index.');
+                        return;
+                    }
+                    array.splice(index, 0, value); // Insert value at the specified index
+                    updateVisualization();
+                    log(`Inserted ${value} at index ${index}`);
+                    break;
+
+                case 'delete':
+                    if (isNaN(index) || index < 0 || index >= array.length) {
+                        alert('Please enter a valid index.');
+                        return;
+                    }
+                    const deletedValue = array.splice(index, 1); // Delete value at the specified index
+                    updateVisualization();
+                    log(`Deleted ${deletedValue} from index ${index}`);
+                    break;
+
+                case 'search':
+                    if (isNaN(value)) {
+                        alert('Please enter a valid value.');
+                        return;
+                    }
+                    const searchIndex = array.indexOf(value);
+                    if (searchIndex !== -1) {
+                        log(`Value ${value} found at index ${searchIndex}`);
+                        highlightBar(searchIndex, 'search'); // Highlight the found bar
+                    } else {
+                        log(`Value ${value} not found in the array`);
+                    }
+                    break;
+
+                case 'update':
+                    if (isNaN(value) || isNaN(index) || index < 0 || index >= array.length) {
+                        alert('Please enter a valid value and index.');
+                        return;
+                    }
+                    array[index] = value; // Update value at the specified index
+                    updateVisualization();
+                    log(`Updated index ${index} with value ${value}`);
+                    break;
+
+                default:
+                    alert('Please select a valid operation.');
+            }
+        });
+
+        // Highlight a specific bar
+        function highlightBar(index, type) {
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach((bar, i) => {
+                bar.classList.remove('highlight-search');
+                if (i === index && type === 'search') {
+                    bar.classList.add('highlight-search');
+                }
+            });
+        }
+
+        // Log function
+        function log(message) {
+            const logEntries = document.getElementById('logEntries');
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.textContent = message;
+            logEntries.appendChild(logEntry);
+            logEntries.scrollTop = logEntries.scrollHeight; // Auto-scroll to the latest log
+        }
+
+       
+
+        // Dropdown functionality
+        const dropbtn = document.querySelector('.dropbtn');
+        const dropdownContent = document.querySelector('.dropdown-content');
+
+        dropbtn.addEventListener('click', () => {
+            dropdownContent.classList.toggle('show'); // Toggle the visibility of the dropdown
+        });
+
+        // Close the dropdown if the user clicks outside of it
+        window.addEventListener('click', (event) => {
+            if (!event.target.matches('.dropbtn')) {
+                if (dropdownContent.classList.contains('show')) {
+                    dropdownContent.classList.remove('show');
+                }
+            }
+        });
+         // Initialize the visualization
+         array = generateRandomArray(parseInt(arraySizeInput.value));
+         updateVisualization();
+    </script>
+</body>
+</html>
