@@ -7,19 +7,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../sorting/sorting-styles.css">
     <style>
-        /* Highlighted Bar */
-        .bar.highlight-search {
-            background-color: #ffeb3b; /* Yellow color for search highlight */
-            transition: background-color 0.3s ease;
-        }
-
+ 
         /* Styling for the select dropdown */
         select {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 300px;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
@@ -35,7 +30,6 @@
             outline: none;
         }
 
-    
         select option {
             font-size: 16px;
             color: var(--primary-color);
@@ -43,12 +37,102 @@
             padding: 10px;
         }
 
-        /* Optional: Add hover effect for dropdown options */
         select:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     
         }
+
+        .visualizer {
+            display: grid;
+            grid-template-columns: 1fr 0.4fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Array Box Container */
+        .box-container {
+            display: inline-block;
+            text-align: center;
+            align-items: center;
+            margin: 5px;
+        }
+
+        .array-box { 
+            display: flex;
+            flex-wrap: wrap; /* Allow nodes to wrap to the next row */
+            justify-content: flex-start; 
+            align-items: center; /* Center nodes vertically */
+            width: 100%; 
+            height: 300px; 
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            overflow-y: auto;
+        }
+
+        /* Array Box */
+        .box {
+            width: 48px;
+            height: 48px;
+            line-height: 50px;
+            background-color: #007acc;
+            color: #fff;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Index Label */
+        .index-label {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #555;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .log-containers {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            max-height: 500px;  /* Corrected the typo from max-weidth to max-width */
+            overflow-y: auto;
+        }
+        
+        /* Log Entries */
+        .log-entries {
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-start;
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        /* Highlighted Box for Insert */
+        .box.highlight-insert {
+            background-color: #4caf50; /* Green color for insert highlight */
+            color: #fff;
+        }
+
+        /* Highlighted Box for Update */
+        .box.highlight-update {
+            background-color: #180462; /* Blue color for update highlight */
+            color: #fff;
+        }
+
+        /* Highlighted Box for Search */
+        .box.highlight-search {
+            background-color: #ffeb3b; /* Yellow color for search highlight */
+            color: #333; /* Darker text color for contrast */
+        }
+
     </style>
 </head>
 <body>
@@ -59,14 +143,11 @@
                 <button class="dropbtn">Array Operations</button>
                 <div class="dropdown-content">
                     <a href="array.html" class="active">Array Visualizer</a>
-                    <a href="../searching/linearsearch.html">Linear Search</a>
-                    <a href="../searching/binarysearch.html">Binary Search</a>
+                    <a href="linkedlist.html">Linked List</a>
                 </div>
             </div>
             <button id="generateArray" class="btn">Generate Random Array</button>
             <button id="performOperation" class="btn">Perform Operation</button>
-            <button id="pauseBtn" class="btn" disabled>Pause</button>
-            <button id="resetBtn" class="btn">Reset</button>
         </div>
     </nav>
 
@@ -74,8 +155,8 @@
         <div class="controls-panel">
             <div class="control-group">
                 <label for="arraySize">Array Size:</label>
-                <input type="range" id="arraySize" min="5" max="25" value="10">
-                <span id="arraySizeValue">10</span>
+                <input type="range" id="arraySize" min="5" max="100" value="9">
+                <span id="arraySizeValue">9</span>
             </div>
             <div class="control-group">
                 <label for="customArray">Custom Array:</label>
@@ -107,10 +188,10 @@
         <div class="visualizer">
             <div class="array-container">
                 <h2>Array Visualization</h2>
-                <div class="array-bars" id="arrayBars"></div>
+                <div class="array-box" id="arrayBoxes"></div>
             </div>
             
-            <div class="log-container">
+            <div class="log-containers">
                 <h2>Logs</h2>
                 <div id="logEntries" class="log-entries"></div>
             </div>
@@ -148,22 +229,18 @@
     </div>
 
     <script>
-        const arrayBars = document.getElementById('arrayBars');
+        const arrayBars = document.getElementById('arrayBoxes');
         const arraySizeInput = document.getElementById('arraySize');
         const arraySizeValue = document.getElementById('arraySizeValue');
         const customArrayInput = document.getElementById('customArray');
         const applyArrayBtn = document.getElementById('applyArray');
         const generateArrayBtn = document.getElementById('generateArray');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const resetBtn = document.getElementById('resetBtn');
         const codeDisplay = document.getElementById('codeDisplay');
 
         const operationValueInput = document.getElementById('operationValue');
         const operationIndexInput = document.getElementById('operationIndex');
         
         let array = [];
-        let isPaused = false;
-        let isRunning = false;
 
         // Function to generate a random array
         function generateRandomArray(size) {
@@ -172,18 +249,22 @@
 
         // Function to update the visualization
         function updateVisualization() {
-            arrayBars.innerHTML = '';
-            array.forEach(value => {
-                const bar = document.createElement('div');
-                bar.className = 'bar';
-                bar.style.height = `${value * 3}px`; // Scale the height for better visualization
-                
-                const label = document.createElement('div');
-                label.className = 'bar-label';
-                label.textContent = value;
-                bar.appendChild(label);
+            arrayBars.innerHTML = ''; // Clear existing boxes
+            array.forEach((value, index) => {
+                const boxContainer = document.createElement('div');
+                boxContainer.className = 'box-container';
 
-                arrayBars.appendChild(bar);
+                const box = document.createElement('div');
+                box.className = 'box';
+                box.textContent = value; // Display the value inside the box
+
+                const indexLabel = document.createElement('div');
+                indexLabel.className = 'index-label';
+                indexLabel.textContent = index; // Display the index below the box
+
+                boxContainer.appendChild(box);
+                boxContainer.appendChild(indexLabel);
+                arrayBars.appendChild(boxContainer);
             });
         }
 
@@ -217,17 +298,6 @@
             updateVisualization();
         });
 
-        // Reset button functionality
-        resetBtn.addEventListener('click', () => {
-            isRunning = false;
-            isPaused = false;
-            pauseBtn.disabled = true;
-            resetBtn.disabled = false;
-            array = generateRandomArray(parseInt(arraySizeInput.value));
-            updateVisualization();
-            log('Visualization reset');
-        });
-
         // Perform Operation Button
         const performOperationBtn = document.getElementById('performOperation');
         const operationTypeSelect = document.getElementById('operationType');
@@ -246,6 +316,7 @@
                     }
                     array.splice(index, 0, value); // Insert value at the specified index
                     updateVisualization();
+                    highlightBox(index, 'insert'); // Highlight the inserted box
                     log(`Inserted ${value} at index ${index}`);
                     break;
 
@@ -267,7 +338,7 @@
                     const searchIndex = array.indexOf(value);
                     if (searchIndex !== -1) {
                         log(`Value ${value} found at index ${searchIndex}`);
-                        highlightBar(searchIndex, 'search'); // Highlight the found bar
+                        highlightBox(searchIndex, 'search'); // Highlight the found box
                     } else {
                         log(`Value ${value} not found in the array`);
                     }
@@ -280,6 +351,7 @@
                     }
                     array[index] = value; // Update value at the specified index
                     updateVisualization();
+                    highlightBox(index, 'update'); // Highlight the updated box
                     log(`Updated index ${index} with value ${value}`);
                     break;
 
@@ -288,13 +360,23 @@
             }
         });
 
-        // Highlight a specific bar
-        function highlightBar(index, type) {
-            const bars = document.querySelectorAll('.bar');
-            bars.forEach((bar, i) => {
-                bar.classList.remove('highlight-search');
-                if (i === index && type === 'search') {
-                    bar.classList.add('highlight-search');
+       
+
+        // Highlight a specific box
+        function highlightBox(index, type) {
+            const boxes = document.querySelectorAll('.box');
+            boxes.forEach((box, i) => {
+                box.style.backgroundColor = '#007acc'; // Reset all boxes to default color
+                box.style.color = '#fff'; // Reset text color
+                if (i === index) {
+                    if (type === 'insert') {
+                        box.style.backgroundColor = '#4caf50'; // Green for insert
+                    } else if (type === 'update') {
+                        box.style.backgroundColor = '#180462'; // Blue for update
+                    } else if (type === 'search') {
+                        box.style.backgroundColor = '#ffeb3b'; // Yellow for search
+                        box.style.color = '#333'; // Darker text color for contrast
+                    }
                 }
             });
         }

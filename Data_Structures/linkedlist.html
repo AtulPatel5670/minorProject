@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked List Visualizer - Algorithm Visualizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../sorting/sorting-styles.css">
+    <style>
+        /* General Styles */
+         /* Styling for the select dropdown */
+         select {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 300px; 
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        select:focus {
+            border-color: #007acc;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            outline: none;
+        }
+
+        select option {
+            font-size: 16px;
+            color: var(--primary-color);
+            background: rgba(102, 126, 234, 0.1);
+            padding: 10px;
+        }
+
+        select:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    
+        }
+
+
+        .log-containers {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            max-height: 500px;  /* Corrected the typo from max-weidth to max-width */
+            overflow-y: auto;
+        }
+        
+        /* Log Entries */
+        .log-entries {
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-start;
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .visualizer {
+            display: grid;
+            grid-template-columns: 1fr 0.4fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Linked List Node Styles */
+        .node-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow nodes to wrap to the next row */
+            justify-content: flex-start; 
+            align-items: center; /* Center nodes vertically */
+            width: 100%; 
+            height: 300px; 
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            overflow-y: auto;
+           
+        }
+        /* Node Wrapper */
+        .node-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 0.1rem;
+            position: relative;
+        }
+
+        /* Node */
+        .node {
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            background-color: #007acc;
+            color: #fff;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Index Label */
+        .index-label {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #555;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Arrow */
+        .arrow {
+            width: 30px;
+            height: 3px;
+            background-color: #007acc;
+            position: relative;
+            margin-top: -6px; /* Adjust spacing between nodes */
+            margin-bottom: 15px; /* Adjust spacing between nodes */
+        }
+
+        .arrow::after {
+            content: '';
+            position: absolute;
+            top: -3.5px;
+            right: -3px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid #007acc;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+     
+        .node.highlight-insert {
+            background-color: #4caf50; /* Green for insert */
+        }
+
+        .node.highlight-update {
+            background-color: #012a4b; /* Blue for update */
+        }
+
+        .node.highlight-search {
+            background-color: #ffeb3b; /* Yellow for search */
+            color: #333; /* Darker text color for contrast */
+        }
+
+        .node.highlight-delete {
+            background-color: #f44336; /* Red for delete */
+        }
+        .node.highlight-default {
+            background-color: #007acc; /* Default color */
+        }
+      
+      
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="../home.html" class="logo">VisuAlgo</a>
+        <div class="controls">
+            <div class="dropdown">
+                <button class="dropbtn">Linked List Operations</button>
+                <div class="dropdown-content">
+                    <a href="array.html">Array Visualizer</a>
+                    <a href="linkedlist.html" class="active">Linked List</a>
+                </div>
+            </div>
+            <button id="generatelist" class="btn">Generate Random Array</button>
+            <button id="performOperation" class="btn">Perform Operation</button>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="controls-panel">
+            <div class="control-group">
+                <label for="listSize">List Size:</label>
+                <input type="range" id="listSize" min="5" max="20" value="9">
+                <span id="listSizeValue">9</span>
+            </div>
+            <div class="control-group">
+                <label for="customList">Custom List:</label>
+                <input type="text" id="customList" placeholder="Enter numbers separated by commas">
+                <button class="btn" id="applyList">Apply</button>
+            </div>
+        </div>
+        <div class="controls-panel">
+            <div class="control-group">
+                <label for="nodeValue">Value:</label>
+                <input type="number" id="nodeValue" placeholder="Enter value">
+            </div>
+            <div class="control-group">
+                <label for="nodeIndex">Index:</label>
+                <input type="number" id="nodeIndex" placeholder="Enter index">
+            </div>
+            <div class="control-group">
+                <label for="operationType">Operation:</label>
+                <select id="operationType">
+                    <option value="insert">Insert</option>
+                    <option value="delete">Delete</option>
+                    <option value="search">Search</option>
+                    <option value="update">Update</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="visualizer">
+            <div class="array-container">
+                <h2>Linked List Visualization</h2>
+                <div class="node-container" id="linkedListVisualizer"></div>
+            </div>
+            
+            <div class="log-containers">
+                <h2>Logs</h2>
+                <div id="logEntries" class="log-entries"></div>
+            </div>
+        </div>
+
+        <div class="algorithm-description">
+            <h3>About Linked List Visualizer</h3>
+            <div class="description-content">
+                <p>
+                    A linked list is a linear data structure where each element (node) contains a value and a reference (or pointer) to the next node in the sequence.
+                </p>
+                <h3>How It Works:</h3>
+                <ol>
+                    <li>Insert nodes at specific positions.</li>
+                    <li>To insert value at node enter index 0(head index).</li>
+                    <li>Delete nodes from specific positions.</li>
+                    <li>Search for nodes by value.</li>
+                    <li>Update the value of nodes at specific positions.</li>
+                </ol>
+                <h3>Applications:</h3>
+                <p>
+                    Linked lists are widely used in dynamic memory allocation, stacks, queues, and graph adjacency representations.
+                </p>
+                <h3>Complexity:</h3>
+                <ul>
+                    <li><strong>Access:</strong> O(n)</li>
+                    <li><strong>Search:</strong> O(n)</li>
+                    <li><strong>Insertion/Deletion:</strong> O(1) (at the head) or O(n) (at arbitrary positions)</li>
+                </ul>
+                <p>
+                    <strong>Space Complexity:</strong> O(n), where n is the number of nodes in the linked list.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Linked List Node Class
+        class Node {
+            constructor(value) {
+                this.value = value;
+                this.next = null;
+            }
+        }
+
+        // Linked List Class
+        class LinkedList {
+            constructor() {
+                this.head = null;
+                this.size = 0;
+            }
+
+            // Insert a node at a specific index
+            insert(value, index) {
+                if (index < 0 || index > this.size) {
+                    alert('Invalid index');
+                    return;
+                }
+
+                const newNode = new Node(value);
+
+                if (index === 0) {
+                    newNode.next = this.head;
+                    this.head = newNode;
+                } else {
+                    let current = this.head;
+                    let previous = null;
+                    let i = 0;
+
+                    while (i < index) {
+                        previous = current;
+                        current = current.next;
+                        i++;
+                    }
+
+                    newNode.next = current;
+                    previous.next = newNode;
+                }
+
+                this.size++;
+                updateVisualization(index, 'insert');
+            }
+
+            // Delete a node at a specific index
+            delete(index) {
+                if (index < 0 || index >= this.size) {
+                    alert('Invalid index');
+                    return;
+                }
+
+                let current = this.head;
+
+                if (index === 0) {
+                    this.head = current.next;
+                } else {
+                    let previous = null;
+                    let i = 0;
+
+                    while (i < index) {
+                        previous = current;
+                        current = current.next;
+                        i++;
+                    }
+
+                    previous.next = current.next;
+                }
+
+                this.size--;
+                updateVisualization();
+            }
+
+            // Search for a node with a specific value
+            search(value) {
+                let current = this.head;
+                let index = 0;
+
+                while (current) {
+                    if (current.value === value) {
+                        updateVisualization(index, 'search');
+                        return;
+                    }
+                    current = current.next;
+                    index++;
+                }
+
+                alert('Value not found');
+            }
+
+            // Update a node at a specific index
+            update(value, index) {
+                if (index < 0 || index >= this.size) {
+                    alert('Invalid index');
+                    return;
+                }
+
+                let current = this.head;
+                let i = 0;
+
+                while (i < index) {
+                    current = current.next;
+                    i++;
+                }
+
+                current.value = value;
+                updateVisualization(index, 'update');
+            }
+
+            // Get all nodes as an array
+            getNodes() {
+                const nodes = [];
+                let current = this.head;
+
+                while (current) {
+                    nodes.push(current);
+                    current = current.next;
+                }
+
+                return nodes;
+            }
+        }
+
+        // Initialize Linked List
+        const linkedList = new LinkedList();
+
+        // DOM Elements
+        const linkedListVisualizer = document.getElementById('linkedListVisualizer');
+        const performOperationBtn = document.getElementById('performOperation');
+        const nodeValueInput = document.getElementById('nodeValue');
+        const nodeIndexInput = document.getElementById('nodeIndex');
+        const operationTypeSelect = document.getElementById('operationType');
+        const generateArrayBtn = document.getElementById('generatelist');
+        const listSizeInput = document.getElementById('listSize');
+        const listSizeValue = document.getElementById('listSizeValue');
+        const applyListBtn = document.getElementById('applyList');
+
+        generateArrayBtn.addEventListener('click', () => {
+            const size = parseInt(listSizeInput.value);
+            listSizeValue.textContent = size; // Update the size display
+            generateRandomLinkedList(size); // Generate the linked list
+            log(`Generated a random linked list with ${size} nodes`);
+        });
+
+        listSizeInput.addEventListener('input', () => {
+            const size = parseInt(listSizeInput.value);
+            listSizeValue.textContent = size; // Update the size display
+            generateRandomLinkedList(size); // Generate the linked list
+        });
+
+        // Update Visualization
+        function updateVisualization(highlightIndex = null, highlightType = null) {
+            linkedListVisualizer.innerHTML = ''; // Clear existing nodes
+            const nodes = linkedList.getNodes();
+
+            nodes.forEach((node, index) => {
+                // Create a container for the node and its index
+                const nodeContainer = document.createElement('div');
+                nodeContainer.className = 'node-wrapper';
+
+                // Create the node element
+                const nodeElement = document.createElement('div');
+                nodeElement.className = 'node';
+                nodeElement.textContent = node.value;
+
+                // Highlight the node if needed
+                if (index === highlightIndex && highlightType) {
+                    nodeElement.classList.add(`highlight-${highlightType}`);
+                }
+
+                // Create the index label
+                const indexLabel = document.createElement('div');
+                indexLabel.className = 'index-label';
+                indexLabel.textContent = index;
+
+                // Append the node and index label to the container
+                nodeContainer.appendChild(nodeElement);
+                nodeContainer.appendChild(indexLabel);
+
+                // Append the container to the visualizer
+                linkedListVisualizer.appendChild(nodeContainer);
+
+                // Add an arrow if it's not the last node
+                if (index < nodes.length - 1) {
+                    const arrow = document.createElement('div');
+                    arrow.className = 'arrow';
+                    linkedListVisualizer.appendChild(arrow);
+                }
+            });
+        }
+
+        // Perform Operation
+        performOperationBtn.addEventListener('click', () => {
+            const operationType = operationTypeSelect.value;
+            const value = parseInt(nodeValueInput.value);
+            const index = parseInt(nodeIndexInput.value);
+
+            switch (operationType) {
+                case 'insert':
+                    linkedList.insert(value, index);
+                    log(`Inserted value ${value} at index ${index}`);
+                    break;
+                case 'delete':
+                    linkedList.delete(index);
+                    log(`Deleted node at index ${index}`);
+                    break;
+                case 'search':
+                    linkedList.search(value);
+                    log(`Searched for value ${value}`);
+                    break;
+                case 'update':
+                    linkedList.update(value, index);
+                    log(`Updated node at index ${index} with value ${value}`);
+                    break;
+                default:
+                    alert('Invalid operation');
+            }
+        });
+        
+        // Generate Random Linked List
+        function generateRandomLinkedList(size) {
+            linkedList.head = null; // Reset the linked list
+            linkedList.size = 0;
+
+            for (let i = 0; i < size; i++) {
+                const randomValue = Math.floor(Math.random() * 100); // Generate random values between 0 and 99
+                linkedList.insert(randomValue, i); // Insert at the end of the list
+            }
+
+            updateVisualization(); // Update the visualization
+        }
+
+         // Dropdown functionality
+         const dropbtn = document.querySelector('.dropbtn');
+         const dropdownContent = document.querySelector('.dropdown-content');
+ 
+         dropbtn.addEventListener('click', () => {
+             dropdownContent.classList.toggle('show'); // Toggle the visibility of the dropdown
+         });
+ 
+         // Close the dropdown if the user clicks outside of it
+         window.addEventListener('click', (event) => {
+             if (!event.target.matches('.dropbtn')) {
+                 if (dropdownContent.classList.contains('show')) {
+                     dropdownContent.classList.remove('show');
+                 }
+             }
+         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const defaultSize = parseInt(listSizeInput.value); // Use the default size from the range input
+            generateRandomLinkedList(defaultSize); // Generate the default linked list
+        });
+
+        applyListBtn.addEventListener('click', () => {
+            const customListInput = document.getElementById('customList').value;
+            const customValues = customListInput
+                .split(',')
+                .map(num => parseInt(num.trim()))
+                .filter(num => !isNaN(num)); // Filter out invalid numbers
+
+            if (customValues.length > 0) {
+                linkedList.head = null; // Reset the linked list
+                linkedList.size = 0;
+
+                customValues.forEach((value, index) => {
+                    linkedList.insert(value, index); // Insert each value into the linked list
+                });
+
+                updateVisualization(); // Update the visualization
+                log(`Applied custom linked list: [${customValues.join(', ')}]`);
+            } else {
+                alert('Please enter valid numbers separated by commas.');
+            }
+        });
+
+        function log(message) {
+            const logEntries = document.getElementById('logEntries');
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.textContent = message;
+            logEntries.appendChild(logEntry);
+            logEntries.scrollTop = logEntries.scrollHeight; // Auto-scroll to the latest log
+        }
+    </script>
+</body>
+</html>

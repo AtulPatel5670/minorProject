@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./images/logo1.png" type="image/png">
     <title>Login - Algorithm Visualizer</title>
     <link rel="stylesheet" href="styles.css">
     <!-- Load Google API first -->
@@ -11,15 +12,16 @@
 </head>
 <body>
     <video id="background-video" autoplay muted loop playsinline>
-        <source src="backgroundclip.mp4" type="video/mp4">
+        <source src="./images/backgroundclip.mp4" type="video/mp4">
     </video>
-    <header>VisuAlgo</header>
+    <header>
+        <img src="./images/logo-transparent-png.png" alt="Logo" style="height: 130% ; width:30%"></header>
     <div class="login-container">
         <h2 id="form-title">Login</h2>
         <form id="authForm">
             <div class="input-group">
-                <label for="username">Username or Email</label>
-                <input type="text" id="username" placeholder="Enter your username or email" required>
+                <label for="username">Email</label>
+                <input type="text" id="username" placeholder="Enter your email" required>
             </div>
             <div class="input-group">
                 <label for="password">Password</label>
@@ -43,13 +45,15 @@
             <span>or</span>
         </div>
         <div id="googleSignIn" class="google-signin"></div>
+       
     </div>
 
     <!-- Load our script last -->
     <script src="script.js"></script>
     <script>
         window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-      </script>
-      <script defer src="/_vercel/insights/script.js"></script>
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    
 </body>
 </html>

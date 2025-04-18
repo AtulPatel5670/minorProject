@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="logo1.png">
+  <link rel="icon" href="./images/logo1.png" type="image/png">
   <title>Algorithm Visualizer - Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
     :root {
       --primary-color: #667eea;
@@ -377,6 +379,54 @@
         outline: none;
         box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
     }
+    .additional-info{
+        text-align: center;
+        margin: 2rem auto;
+        padding: 1rem;
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        max-width: 800px;
+    }
+    .additional-info blockquote {
+        font-style: italic;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+    }
+    .additional-info cite {
+        display: block;
+        margin-top: 0.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+    .additional-info a {
+        display: inline-block;
+        margin: 0.5rem 0;
+        text-decoration: none;
+        color: var(--text-color);
+        font-weight: bold;
+        transition: var(--transition);
+    }
+    i.fab.fa-github {
+      font-size: 24px;
+      color: #000;
+    }
+    i.fab.fa-github:hover {
+      color: #333;
+    }  
+    .fab.fa-x-twitter {
+      font-size: 24px;
+      color: #000;
+    }
+    .fab.fa-linkedin {
+      font-size: 24px;
+      color: #0A66C2; /* LinkedIn blue */
+    }
+    .fab.fa-instagram {
+      font-size: 24px;
+      color: #E4405F; /* Instagram pink */
+    }
+    
   </style>
 </head>
 <body>
@@ -386,13 +436,13 @@
         
             <div class="dropdown">
             <button class="dropdown-btn">
-                <img id="userAvatar" src="profile.png" alt="Profile" class="avatar">
+                <img id="userAvatar" src="./images/profile.png" alt="Profile" class="avatar">
                 <span id="userName">Settings</span>
             </button>
               <div class="dropdown-content">
                 <div class="profile-section">
                     <div class="profile-header">
-                        <img id="profileAvatar" src="profile.png" alt="Profile" class="profile-avatar">
+                        <img id="profileAvatar" src="./images/profile.png" alt="Profile" class="profile-avatar">
                         <div class="profile-info">
                             <div class="name-edit-container">
                                 <h3 id="profileName">User Name</h3>
@@ -430,7 +480,27 @@
       <div class="loading"></div>
       </div>
   </div>
-
+  <div>
+    
+  </div>
+  <div class="additional-info">
+    <blockquote>
+      "I created this website as part of my college project to showcase my skills and understanding of web development. It reflects both my learning and creativity in building functional and interactive web applications."
+      <cite>– Atul Patel</cite>
+  </blockquote>
+  For more suggestions and collaborations, contact me on following links:<br>
+  <a href="https://github.com/AtulPatel5670" target="_blank">
+    <i class="fab fa-github"></i>
+    GitHub Profile</a>
+  <a href="https://www.linkedin.com/in/atul-patel-45a334291/" target="_blank">
+    <i class="fab fa-linkedin"></i>LinkedIn Profile</a>
+  <a href="https://twitter.com/ATULPATEL5670" target="_blank">
+    <i class="fab fa-x-twitter"></i>Twitter Profile</a>
+  <a href="https://www.instagram.com/__atul__patel_" target="_blank">
+    <i class="fab fa-instagram"></i>Instagram Profile</a>
+  <p>Feel free to reach out for any queries or collaborations!</p>
+  <p>Thank you for visiting my project!</p>
+  </div>
   <footer class="footer">
     <p>&copy; 2025 Algorithm Visualizer. All rights reserved.</p>
   </footer>
@@ -460,31 +530,31 @@
           { 
             name: 'Data Structures', 
             description: 'Visualize various data structures including arrays, linked lists, trees, and more.',
-            link: '/Data_Structures/array.html',
+            link: '/data_structures/array.html',
             icon: '🔷'
           },
           { 
             name: 'Pathfinding Algorithms', 
             description: 'Explore pathfinding algorithms like Dijkstra\'s and A* with interactive visualizations.',
-            link: '/pathfinding.html',
+            link: '/path_finding/pathfinding.html',
             icon: '🗺️'
           },
           { 
             name: 'Graph Algorithms', 
             description: 'Learn about graph traversal algorithms including DFS, BFS, and more with visual demonstrations.',
-            link: '/graph.html',
+            link: '/graphs/graph.html',
             icon: '📈'
           },
           { 
             name: 'Dynamic Programming', 
             description: 'Understand dynamic programming solutions with interactive examples and visualizations.',
-            link: '/dp.html',
+            link: '/dynamic_programming/dp.html',
             icon: '⚡'
           },
           { 
             name: 'Recursion', 
             description: 'See recursion in action with visual representations of recursive algorithms.',
-            link: '/recursion.html',
+            link: '/recursions/recursion.html',
             icon: '🔄'
           }
       ];

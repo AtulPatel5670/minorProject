@@ -45,7 +45,7 @@ function validateInput(username, password) {
 // Rate limiting
 const loginAttempts = new Map();
 const MAX_ATTEMPTS = 10;
-const LOCKOUT_TIME = 15 * 60 * 1000; // 15 minutes
+const LOCKOUT_TIME = 5 * 60 * 1000; // 5 minutes
 
 function checkLoginAttempts(username) {
     const attempts = loginAttempts.get(username) || { count: 0, timestamp: Date.now() };
@@ -249,4 +249,3 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('load', initializeGoogleSignIn);
     }
 });
-
