@@ -249,3 +249,6 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('load', initializeGoogleSignIn);
     }
 });
+
+require('dotenv').config();
+const apiKey = process.env.client_id;
