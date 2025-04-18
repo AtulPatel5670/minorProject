@@ -200,7 +200,7 @@ function initializeGoogleSignIn() {
     }
 
     google.accounts.id.initialize({
-        client_id: apiKey,
+        client_id:'553504102-u9ba2l6tvtjbd1o5sjlklje6578ef65n.apps.googleusercontent.com',
         callback: handleGoogleLogin,
         auto_select: false,
         cancel_on_tap_outside: true,
@@ -249,6 +249,3 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('load', initializeGoogleSignIn);
     }
 });
-
-require('dotenv').config();
-const apiKey = process.env.API_KEY;
